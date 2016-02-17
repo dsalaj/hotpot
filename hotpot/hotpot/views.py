@@ -38,4 +38,4 @@ def get_cart(request):
 
 def pdf_html(request):
     send_mail('Subject here', 'Here is the message.', 'hotpot.graz@gmail.com', ['salaj.au@gmail.com'], fail_silently=False)
-    return render(request, 'hotpot/clean.html')
+    return render(request, 'hotpot/clean.html', {'msg': 'email has been sent!'})
