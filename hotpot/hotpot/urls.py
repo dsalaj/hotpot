@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf.urls.static import static
+from hotpot import views, settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-]
+    url(r'^$', views.get_cart, name='get_cart'),
+    url(r'^add/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.add_to_cart, name='add_to_cart'),
+    url(r'^pdf/', views.other_view, name='other_view'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

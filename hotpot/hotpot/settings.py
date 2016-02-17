@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cart',
+    'hotpot',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -119,3 +121,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+MEDIA_ROOT = '/home/dsalaj/oliver/hotpot/hotpot/static/'
+MEDIA_URL = '/static/uploads/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'hotpot.graz@gmail.com'
+EMAIL_HOST_PASSWORD = 'hotpot14776655'
+DEFAULT_FROM_EMAIL = 'hotpot.graz@gmail.com'
+DEFAULT_TO_EMAIL = 'salaj.au@gmail.com'

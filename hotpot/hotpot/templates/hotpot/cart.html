@@ -1,0 +1,42 @@
+{% extends 'hotpot/base.html' %}
+
+{% block body %}
+    <h1>Hotpot app</h1>
+    <h2>Menü</h2>
+    <ul>
+        {% for item in menu %}
+            <li>
+                {{ item.name }} -
+                {{ item.unit_price }} -
+                <input size="2" value="1" type="number">
+                <button class="add" data-menu-item="{{ item.pk }}">Add</button></li>
+        {% endfor %}
+    </ul>
+    <h2>Cart</h2>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+        {% for item in cart %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        $('.add').click(function() {
+            var item = $(this).attr('data-menu-item');
+            var qty = $(this).parent().children('input').val();
+            $.ajax({
+                type: 'GET',
+                url:'/add/'+item+'/'+qty+'/'
+            }).always(function() {
+                location.reload();
+            });
+        });
+    </script>
+{% endblock %}

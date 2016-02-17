@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>My Title</title>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            @page {
+                background-image: url('/home/dsalaj/oliver/hotpot/hotpot/static/hp_logo_invoice_bg.png');
+                size: {{ pagesize }};
+                margin: 1cm;
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0cm;
+                    margin-left: 9cm;
+                    margin-right: 9cm;
+                    height: 1cm;
+                }
+            }
+
+            .container:after {
+              content:"";
+              display:block;
+              clear:both;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="" style="margin-bottom: 1em;">
+            <span style="display: inline-block; float:right;  text-align: right; font-size: 1.2em;">
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Dipl. Ernährungsberaterin</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Gabriele Edler- Binder-Krieglstein</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Mag. Oliver Binder-Krieglstein</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Kernstockgasse 19</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">8020 GRAZ</div>
+                <div><p> </p></div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Tel:  +43 (0)650/65 33 650</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Tel:  +43 (0)660/22 606 32</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Fax:  +43 (0)316 890 573 /15</div>
+                <div><p> </p></div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">E-Mail: office@hotpot.at</div>
+                <div style="line-height: 1.2em; margin-bottom: 0px; margin-top: 0px;">Net:      www.hotpot.at</div>
+            </span>
+        </div>
+        <div class="container" style="font-size: 1.2em;">
+          <div style="display: inline-block;">
+            <div>Sandra Hoch</div>
+            <div>Inge-Morath-Straße 22d</div>
+            <div>8045 Graz</div>
+          </div>
+          <div style="display: inline-block; text-align: right; position: absolute; right: 1em;">
+            <div>Graz, 04.02.2016</div>
+            <div>Rechnungs Nr.: 19/16</div>
+          </div>
+        </div>
+        <div class="container" style="font-size: 1.4em;">
+          <h4 style="text-weight: bold; text-decoration: underline;">Betrifft: Hotpot Zustellung Bestellnr.: 11135</h4>
+        </div>
+        <div class="container" style="font-size: 1.6em;">
+          <h1 style="text-weight: bold; text-align: center; width: 100%;">Rechnung:</h1>
+        </div>
+        <div class="container" style="font-size: 1.2em;">
+          <p>Für die Zustellung versch. Hotpots Bestellnr.: 11135 erlauben wir uns, nachstehende Rechnung zu legen:></p>
+          <ul>
+            <li>1 - Brokkoli - Erdnuss Suppe*  €  6.50</li>
+            <li>2 - Hokkaido -  Kokos Suppe*  €  13.00</li>
+            <li>1 - Orientalische Linsensuppe*  €  6.50</li>
+            <li>1 - Indische Dal Suppe**  €  6.50</li>
+              {% for item in menu %}
+                  <li>{{ item.name }} - {{ item.description }}</li>
+              {% endfor %}
+          </ul>
+        </div>
+        <div class="container" style="font-size: 1.2em;">
+          <p style="text-align: center; width: 100%;">8 Hotpots ..............................................€ 59,50</p>
+          <p style="text-align: center; width: 100%;">(dieser Betrag beinhaltet 10% MwSt.: € 5,41)</p>
+        </div>
+        <div class="container" style="font-size: 1.2em;">
+          <p>Mit lieben Grüßen</p>
+        </div>
+        <div class="container" style="font-size: 1em;">
+          <div style="text-align: center; width: 100%;">Zahlbar nach Rechnungserhalt ohne jeden Abzug: Raiffeisen-Landesbank Steiermark AG</div>
+          <div style="text-align: center; width: 100%;">IBAN: AT15 3800 0000 0451 5136; BIC: RZSTAT2G</div>
+          <div style="text-align: center; width: 100%;">Einvernehmlich ist für beide Teile das Bezirksgericht Graz sachlich und rechtlich zuständig. UID ATU 670 36 423</div>
+        </div>
+    </body>
+</html>
