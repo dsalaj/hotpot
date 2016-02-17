@@ -1,0 +1,49 @@
+{% extends 'hotpot/base.html' %}
+
+{% block body %}
+    <h1>Hotpot app</h1>
+    <h2>Checkout</h2>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Item Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+        {% for item in cart %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.product.unit_price }}</td>
+            <td><input size="2" value="{{ item.quantity }}" type="number"></td>
+            <td>{{ item.total_price }}</td>
+            <td><button class="change" data-menu-item="{{ item.product.pk }}">Change</button></td>
+            <td><button class="remove" data-menu-item="{{ item.product.pk }}">Remove</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        $('.change').click(function() {
+            var item = $(this).attr('data-menu-item');
+            var qty = $(this).parent().parent().children('td').children('input').val();
+            $.ajax({
+                type: 'GET',
+                url:'/change/'+item+'/'+qty+'/'
+            }).always(function() {
+                location.reload();
+            });
+        });
+        $('.remove').click(function() {
+            var item = $(this).attr('data-menu-item');
+            $.ajax({
+                type: 'GET',
+                url:'/remove/'+item+'/'
+            }).always(function() {
+                location.reload();
+            });
+        });
+    </script>
+    <hr>
+    <a href="/"><button>Back</button></a>
+    <a href="/finish/"><button>Complete Checkout</button></a>
+    <a href="/pdf/">PDF-preview</a>
+{% endblock %}

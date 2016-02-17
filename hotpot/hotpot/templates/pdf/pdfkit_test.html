@@ -61,13 +61,15 @@
         <div class="container" style="font-size: 1.2em;">
           <p>Für die Zustellung versch. Hotpots Bestellnr.: 11135 erlauben wir uns, nachstehende Rechnung zu legen:></p>
           <ul>
+            {% comment %}
             <li>1 - Brokkoli - Erdnuss Suppe*  €  6.50</li>
             <li>2 - Hokkaido -  Kokos Suppe*  €  13.00</li>
             <li>1 - Orientalische Linsensuppe*  €  6.50</li>
             <li>1 - Indische Dal Suppe**  €  6.50</li>
-              {% for item in menu %}
-                  <li>{{ item.name }} - {{ item.description }}</li>
-              {% endfor %}
+            {% endcomment %}
+            {% for item in cart %}
+                <li>{{ item.product.name }} * {{ item.quantity }} = € {{ item.total_price }}</li>
+            {% endfor %}
           </ul>
         </div>
         <div class="container" style="font-size: 1.2em;">
