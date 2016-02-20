@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
+import datetime
 
 class MenuItem(models.Model):
     name = models.CharField(max_length=255)
@@ -26,15 +27,27 @@ class Menu(models.Model):
     def __str__(self):
         return 'FROM ' + str(self.time_from.date()) + ' TO ' + str(self.time_to.date())
 
+    @staticmethod
+    def get_current_menu_items():
+        now = datetime.datetime.now()
+        try:
+            menu = Menu.objects.get(time_from__lte=now, time_to__gte=now)
+        except ObjectDoesNotExist:
+            return None
+        return menu.items.all()
+
     def clean(self):
-        data = self.cleaned_data
-        time_from = data['time_from']
-        time_to = data['time_to']
+        time_from = self.time_from
+        time_to = self.time_to
+        menus = Menu.objects.all()
+        for m in menus:
+            if m.time_from < time_from < m.time_to or \
+               m.time_from < time_to < m.time_to or \
+               time_from < m.time_from and m.time_to < time_to or \
+               time_to < m.time_from and m.time_to < time_from:
+                raise ValidationError("Please enter a value that does not overlap with already "
+                                      "existing menu ("+str(m)+") time range")
 
-        if not (trial_stop > trial_start):
-            raise forms.ValidationError('trial stop must be > trial start')
-
-        return data
 
 class OrderItem(models.Model):
     order = models.ForeignKey('Order')

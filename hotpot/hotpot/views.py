@@ -4,17 +4,18 @@ from django.shortcuts import render
 from hotpot.models import *
 from django.http import HttpResponse
 import easy_pdf
-from easy_pdf.views import PDFTemplateView
+from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
 from django.core.mail import send_mail, EmailMessage
 
 
-def other_view(request):
+def pdf_preview(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
     context = dict(cart=Cart(request))
     pdfres = easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
     response.write(pdfres)
     return HttpResponse(response.getvalue(), content_type='application/pdf')
+
 
 def add_to_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
@@ -29,21 +30,31 @@ def remove_from_cart(request, product_id):
     cart.remove(product)
     print("removed thing to cart")
 
+
 def change_in_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
     cart.update(product, quantity, product.unit_price)
     print("changed thing in cart")
 
-def get_cart(request):
+
+def home(request):
     context = dict(cart=Cart(request))
-    context['menu'] = MenuItem.objects.all()
+    context['menu'] = Menu.get_current_menu_items()
+    return render(request, 'hotpot/home.html', context)
+
+
+def buy(request):
+    context = dict(cart=Cart(request))
+    context['menu'] = Menu.get_current_menu_items()
     return render(request, 'hotpot/cart.html', context)
+
 
 def checkout(request):
     context = dict(cart=Cart(request))
-    context['menu'] = MenuItem.objects.all()
+    context['menu'] = Menu.get_current_menu_items()
     return render(request, 'hotpot/checkout.html', context)
+
 
 def finish(request):
     context = dict(cart=Cart(request))
@@ -60,7 +71,3 @@ def finish(request):
     print "email sent"
     request.session.flush()
     return render(request, 'hotpot/clean.html', {'msg': 'pdf created, email sent!'})
-
-def pdf_html(request):
-    send_mail('Subject here', 'Here is the message.', 'hotpot.graz@gmail.com', ['salaj.au@gmail.com'], fail_silently=False)
-    return render(request, 'hotpot/clean.html', {'msg': 'email has been sent!'})

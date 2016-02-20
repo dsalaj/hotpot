@@ -20,12 +20,12 @@ from hotpot import views, settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.get_cart, name='get_cart'),
+    url(r'^$', views.home, name='home'),
+    url(r'^buy/$', views.buy, name='buy'),
     url(r'^checkout/$', views.checkout, name='checkout'),
     url(r'^finish/$', views.finish, name='finish'),
     url(r'^add/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.add_to_cart, name='add_to_cart'),
     url(r'^change/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.change_in_cart, name='change_in_cart'),
     url(r'^remove/(?P<product_id>[0-9]+)/$', views.remove_from_cart, name='remove_from_cart'),
-    url(r'^pdf/', views.other_view, name='other_view'),
-    url(r'^email/', views.pdf_html, name='email'),
+    url(r'^pdf/', views.pdf_preview, name='pdf_preview'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
