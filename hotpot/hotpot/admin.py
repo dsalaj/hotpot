@@ -7,3 +7,7 @@ class MenuItemAdmin(admin.ModelAdmin):
 
 admin.site.register(Category)
 admin.site.register(MenuItem, MenuItemAdmin)
+
+admin.site.register(Order)
+admin.site.register(Coupon)
+admin.site.register(Menu)

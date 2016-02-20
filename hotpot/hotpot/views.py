@@ -50,11 +50,15 @@ def finish(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
     pdfres = easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
+    print "pdf invoice rendered"
     response.write(pdfres)
     email = EmailMessage('Hello', 'Here is the message with pdf.', 'hotpot.graz@gmail.com',
                          ['salaj.au@gmail.com', 'frost_master@hotmail.com'])
     email.attach('invoicex.pdf', response.getvalue(), 'application/pdf')
+    print "pdf attached to email"
     email.send(fail_silently=False)
+    print "email sent"
+    request.session.flush()
     return render(request, 'hotpot/clean.html', {'msg': 'pdf created, email sent!'})
 
 def pdf_html(request):

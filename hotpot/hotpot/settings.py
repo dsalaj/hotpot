@@ -125,7 +125,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-MEDIA_ROOT = '/home/dsalaj/oliver/hotpot/hotpot/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/static/uploads/'
 
 EMAIL_USE_TLS = True
