@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.utils import timezone
 import datetime
+
 
 class MenuItem(models.Model):
     name = models.CharField(max_length=255)
@@ -69,9 +71,9 @@ class Coupon(models.Model):
 
 class Order(models.Model):
     order_number = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(auto_created=True)
+    timestamp = models.DateTimeField(default=timezone.now)
     delivery_date = models.DateField()
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True)
     first_name = models.CharField(max_length=255)
     family_name = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
@@ -79,7 +81,7 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     zip = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
-    note = models.CharField(max_length=2047)
+    note = models.TextField(max_length=2047)
 
     def __str__(self):
         return str(self.timestamp) + ' ' + str(self.email)

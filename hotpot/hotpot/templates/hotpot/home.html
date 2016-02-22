@@ -1,0 +1,20 @@
+{% extends 'hotpot/base.html' %}
+
+{% block body %}
+    <h1>Hotpot app</h1>
+    {% if menu %}
+        <h2>Current Menü</h2>
+        <ul>
+            {% for item in menu %}
+                <li>
+                    {{ item.name }} -
+                    {{ item.unit_price }}
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="/buy/">Order some Hotpots!</a>
+    {% else %}
+        <h2>No menus defined for this week!</h2>
+        <p>Please contact...</p>
+    {% endif %}
+{% endblock %}

@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^buy/$', views.buy, name='buy'),
     url(r'^checkout/$', views.checkout, name='checkout'),
-    url(r'^finish/$', views.finish, name='finish'),
     url(r'^add/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.add_to_cart, name='add_to_cart'),
     url(r'^change/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.change_in_cart, name='change_in_cart'),
     url(r'^remove/(?P<product_id>[0-9]+)/$', views.remove_from_cart, name='remove_from_cart'),

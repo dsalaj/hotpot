@@ -135,3 +135,6 @@ EMAIL_HOST_USER = 'hotpot.graz@gmail.com'
 EMAIL_HOST_PASSWORD = 'hotpot14776655'
 DEFAULT_FROM_EMAIL = 'hotpot.graz@gmail.com'
 DEFAULT_TO_EMAIL = 'salaj.au@gmail.com'
+
+DATETIME_FORMAT = 'd.m.Y - H:i:s'
+USE_L10N = False

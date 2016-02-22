@@ -2,6 +2,7 @@
 from cart.cart import Cart
 from django.shortcuts import render
 from hotpot.models import *
+from hotpot.forms import OrderForm
 from django.http import HttpResponse
 import easy_pdf
 from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
@@ -52,12 +53,24 @@ def buy(request):
 
 def checkout(request):
     context = dict(cart=Cart(request))
+    if request.method == 'POST':
+        order_form = OrderForm(request.POST)
+        if order_form.is_valid():
+            f = order_form.save(commit=False)
+            f.save()
+            finish({'order': f, 'cart': context['cart']})
+            for item in context['cart']:
+                OrderItem.objects.create(order=f, item=item.product, amount=item.quantity)
+            request.session.flush()
+            return render(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
+    else:
+        order_form = OrderForm()
+    context['order_form'] = order_form
     context['menu'] = Menu.get_current_menu_items()
     return render(request, 'hotpot/checkout.html', context)
 
 
-def finish(request):
-    context = dict(cart=Cart(request))
+def finish(context):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
     pdfres = easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
@@ -69,5 +82,3 @@ def finish(request):
     print "pdf attached to email"
     email.send(fail_silently=False)
     print "email sent"
-    request.session.flush()
-    return render(request, 'hotpot/clean.html', {'msg': 'pdf created, email sent!'})
