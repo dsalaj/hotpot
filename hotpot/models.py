@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
+from django.core.exceptions import ImproperlyConfigured
 import datetime
 
 class MenuItemRetailerPrice(models.Model):
@@ -103,8 +104,19 @@ class Order(models.Model):
     def __str__(self):
         return str(self.timestamp) + ' ' + str(self.email)
 
+
 class Retailer(models.Model):
     password = models.CharField(max_length=40)
 
     def __str__(self):
         return self.password
+
+
+class UserMiddleware(object):
+    @staticmethod
+    def process_request(request):
+        if not hasattr(request, 'session'):
+            raise ImproperlyConfigured("django.contrib.sessions.middleware.SessionMiddleware"
+                                       " must be before UserMiddleware in MIDDLEWARE_CLASSES")
+        if not hasattr(request.session, 'user'):
+            request.session['user'] = ""
