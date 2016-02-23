@@ -85,3 +85,9 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.timestamp) + ' ' + str(self.email)
+
+class Retailer(models.Model):
+    password = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.password

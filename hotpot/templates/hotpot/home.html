@@ -2,6 +2,19 @@
 
 {% block body %}
     <h1>Hotpot app</h1>
+    {% if request.session.logged %}
+        <p>You are logged in as {{ request.session.user }}</p>
+        <form method="post" id="logout_form">
+            {% csrf_token %}
+            <button name="logout" type="submit" value="1">Logout</button>
+        </form>
+    {% else %}
+        <form method="post" id="login_form">
+            {% csrf_token %}
+            {{ login_form.as_table }}
+            <button type="submit">Login</button>
+        </form>
+    {% endif %}
     {% if menu %}
         <h2>Current Menü</h2>
         <ul>

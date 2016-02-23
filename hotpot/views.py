@@ -2,7 +2,7 @@
 from cart.cart import Cart
 from django.shortcuts import render
 from hotpot.models import *
-from hotpot.forms import OrderForm
+from hotpot.forms import *
 from django.http import HttpResponse
 import easy_pdf
 from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
@@ -42,6 +42,21 @@ def change_in_cart(request, product_id, quantity):
 def home(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
+    if request.method == 'POST':
+            if 'logout' in request.POST and request.POST['logout'] == "1":
+                request.session['logged'] = False
+                request.session['user'] = ""
+                context['login_form'] = RetailerLogin()
+                return render(request, 'hotpot/home.html', context)
+
+            login_form = RetailerLogin(request.POST)
+            if login_form.is_valid():
+                print "Login form valid"
+                request.session['logged'] = True
+                request.session['user'] = Retailer.objects.get(password=login_form.data['password']).__str__()
+    else:
+        login_form = RetailerLogin()
+    context['login_form'] = login_form
     return render(request, 'hotpot/home.html', context)
 
 
