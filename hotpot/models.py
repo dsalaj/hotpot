@@ -2,7 +2,10 @@ from django.db import models
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
 from django.core.exceptions import ImproperlyConfigured
+from solo.models import SingletonModel
+from cart.cart import Cart
 import datetime
+
 
 class MenuItemRetailerPrice(models.Model):
     menuitem = models.ForeignKey('MenuItem')
@@ -120,3 +123,13 @@ class UserMiddleware(object):
                                        " must be before UserMiddleware in MIDDLEWARE_CLASSES")
         if not 'user' in request.session.keys():
             request.session['user'] = ""
+        if float(Cart(request).summary()) < Shipping.objects.get().treshold:
+            request.session['shipping_cost'] = str(Shipping.objects.get().price)
+        else:
+            request.session['shipping_cost'] = None
+
+class Shipping(SingletonModel):
+    price = models.DecimalField(decimal_places=2, max_digits=6, default=10)
+    treshold = models.DecimalField(decimal_places=2, max_digits=6, default=50)
+    class Meta:
+        verbose_name = "Shipping"

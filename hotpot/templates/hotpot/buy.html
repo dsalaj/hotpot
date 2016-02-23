@@ -25,12 +25,19 @@
             <th>Total Price</th>
         </tr>
         {% for item in cart %}
-        <tr>
-            <td>{{ item.product.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.total_price }}</td>
-        </tr>
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_price }}</td>
+            </tr>
         {% endfor %}
+        {% if request.session.shipping_cost %}
+            <tr>
+                <td>Shipping</td>
+                <td></td>
+                <td>{{ request.session.shipping_cost }}</td>
+            </tr>
+        {% endif %}
     </table>
     <script>
         $('.add').click(function() {

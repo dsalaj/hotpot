@@ -22,6 +22,16 @@
                 <td><button class="remove" data-menu-item="{{ item.product.pk }}">Remove</button></td>
             </tr>
             {% endfor %}
+            {% if request.session.shipping_cost %}
+                <tr>
+                    <td>Shipping</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ request.session.shipping_cost }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endif %}
         </table>
         <table>
             {{ order_form.as_table }}

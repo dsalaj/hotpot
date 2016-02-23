@@ -1,6 +1,6 @@
 from django.contrib import admin
 from hotpot.models import *
-
+from solo.admin import SingletonModelAdmin
 
 class MenuItemRetailerPriceAdmin(admin.TabularInline):
     model = MenuItemRetailerPrice
@@ -28,3 +28,4 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(Coupon)
 admin.site.register(Menu)
 admin.site.register(Retailer)
+admin.site.register(Shipping, SingletonModelAdmin)
