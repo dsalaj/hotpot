@@ -21,7 +21,6 @@ def pdf_preview(request):
 def add_to_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
-    # TODO: check if logged in and add correct price!
     cart.add(product, product.retailer_price(request.session['user']), quantity)
     print("added thing to cart")
 
@@ -36,7 +35,7 @@ def remove_from_cart(request, product_id):
 def change_in_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
-    cart.update(product, quantity, product.unit_price)
+    cart.update(product, quantity, product.retailer_price(request.session['user']))
     print("changed thing in cart")
 
 
