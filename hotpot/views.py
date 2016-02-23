@@ -7,6 +7,7 @@ from django.http import HttpResponse
 import easy_pdf
 from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
 from django.core.mail import send_mail, EmailMessage
+from django.views.decorators.cache import never_cache
 
 
 def pdf_preview(request):
@@ -39,6 +40,7 @@ def change_in_cart(request, product_id, quantity):
     print("changed thing in cart")
 
 
+@never_cache
 def home(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
@@ -60,12 +62,14 @@ def home(request):
     return render(request, 'hotpot/home.html', context)
 
 
+@never_cache
 def buy(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
     return render(request, 'hotpot/buy.html', context)
 
 
+@never_cache
 def checkout(request):
     context = dict(cart=Cart(request))
     if request.method == 'POST':

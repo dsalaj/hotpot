@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
 from django.core.exceptions import ImproperlyConfigured
@@ -61,7 +62,7 @@ class Menu(models.Model):
     def clean(self):
         time_from = self.time_from
         time_to = self.time_to
-        menus = Menu.objects.all()
+        menus = Menu.objects.filter(~Q(pk=self.pk))
         for m in menus:
             if m.time_from < time_from < m.time_to or \
                m.time_from < time_to < m.time_to or \
@@ -128,8 +129,32 @@ class UserMiddleware(object):
         else:
             request.session['shipping_cost'] = None
 
+
 class Shipping(SingletonModel):
     price = models.DecimalField(decimal_places=2, max_digits=6, default=10)
     treshold = models.DecimalField(decimal_places=2, max_digits=6, default=50)
     class Meta:
         verbose_name = "Shipping"
+
+
+class DeliveryDays(models.Model):
+    MON = 0
+    TUE = 1
+    WED = 2
+    THU = 3
+    FRI = 4
+    SAT = 5
+    SUN = 6
+    DAY = (
+        (MON, 'Montag'),
+        (TUE, 'Dienstag'),
+        (WED, 'Mittwoch'),
+        (THU, 'Donnerstag'),
+        (FRI, 'Freitag'),
+        (SAT, 'Samstag'),
+        (SUN, 'Sonntag')
+    )
+    shipping = models.ForeignKey('Shipping')
+    day = models.IntegerField(choices=DAY)
+    time = models.TimeField()
+

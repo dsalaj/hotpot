@@ -22,10 +22,18 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ('timestamp', 'order_number',)
     inlines = [OrderItemAdmin, ]
 
+
+class DeliveryDayAdmin(admin.TabularInline):
+    model = DeliveryDays
+    extra = 0
+
+class ShippingAdmin(SingletonModelAdmin):
+    inlines = [DeliveryDayAdmin, ]
+
 admin.site.register(Category)
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Coupon)
 admin.site.register(Menu)
 admin.site.register(Retailer)
-admin.site.register(Shipping, SingletonModelAdmin)
+admin.site.register(Shipping, ShippingAdmin)
