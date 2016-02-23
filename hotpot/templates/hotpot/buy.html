@@ -7,9 +7,14 @@
         {% for item in menu %}
             <li>
                 {{ item.name }} -
-                {{ item.unit_price }} -
+                {{ item|retailer_price:request.session.user }}
+                -
+                {% if item|retailer_price:request.session.user != "undefined" %}
                 <input size="2" value="1" type="number">
                 <button class="add" data-menu-item="{{ item.pk }}">Add</button></li>
+                {% else %}
+                    <span>Contact the kitchen to request the price!</span>
+                {% endif %}
         {% endfor %}
     </ul>
     <h2>Cart</h2>

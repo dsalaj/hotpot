@@ -36,6 +36,7 @@ class Cart:
             item = models.Item.objects.get(
                 cart=self.cart,
                 product=product,
+                unit_price=unit_price
             )
         except models.Item.DoesNotExist:
             item = models.Item()

@@ -21,7 +21,8 @@ def pdf_preview(request):
 def add_to_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
-    cart.add(product, product.unit_price, quantity)
+    # TODO: check if logged in and add correct price!
+    cart.add(product, product.retailer_price(request.session['user']), quantity)
     print("added thing to cart")
 
 
@@ -63,7 +64,7 @@ def home(request):
 def buy(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
-    return render(request, 'hotpot/cart.html', context)
+    return render(request, 'hotpot/buy.html', context)
 
 
 def checkout(request):

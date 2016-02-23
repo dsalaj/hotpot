@@ -3,6 +3,11 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
 import datetime
 
+class MenuItemRetailerPrice(models.Model):
+    menuitem = models.ForeignKey('MenuItem')
+    retailer = models.ForeignKey('Retailer')
+    price = models.DecimalField(decimal_places=2, max_digits=6)
+
 
 class MenuItem(models.Model):
     name = models.CharField(max_length=255)
@@ -12,6 +17,17 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
+
+    def retailer_price(self, retailer):
+        try:
+            r = Retailer.objects.get(password=retailer)
+            try:
+                r_price = self.menuitemretailerprice_set.get(retailer=r)
+                return r_price.price
+            except:
+                return "undefined"
+        except:
+            return self.unit_price
 
 
 class Category(models.Model):
@@ -54,6 +70,7 @@ class Menu(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey('Order')
     item = models.ForeignKey('MenuItem')
+    retailer = models.ForeignKey('Retailer', null=True)
     amount = models.IntegerField()
 
 

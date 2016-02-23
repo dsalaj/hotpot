@@ -15,7 +15,7 @@
             {% for item in cart %}
             <tr>
                 <td>{{ item.product.name }}</td>
-                <td>{{ item.product.unit_price }}</td>
+                <td>{{ item.unit_price }}</td>
                 <td><input size="2" value="{{ item.quantity }}" type="number"></td>
                 <td>{{ item.total_price }}</td>
                 <td><button class="change" data-menu-item="{{ item.product.pk }}">Change</button></td>
