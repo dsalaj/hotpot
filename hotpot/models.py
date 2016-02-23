@@ -118,5 +118,5 @@ class UserMiddleware(object):
         if not hasattr(request, 'session'):
             raise ImproperlyConfigured("django.contrib.sessions.middleware.SessionMiddleware"
                                        " must be before UserMiddleware in MIDDLEWARE_CLASSES")
-        if not hasattr(request.session, 'user'):
+        if not 'user' in request.session.keys():
             request.session['user'] = ""
