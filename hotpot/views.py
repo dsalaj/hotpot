@@ -8,7 +8,7 @@ import easy_pdf
 from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
 from django.core.mail import send_mail, EmailMessage
 from django.views.decorators.cache import never_cache
-
+from newsletter.middleware import newsletter_view_helper
 
 def pdf_preview(request):
     response = HttpResponse(content_type='application/pdf')
@@ -39,6 +39,9 @@ def change_in_cart(request, product_id, quantity):
     cart.update(product, quantity, product.retailer_price(request.session['user']))
     print("changed thing in cart")
 
+def render_with_middleware(request, html, context):
+    newsletter_view_helper(request, context)
+    return render(request, html, context)
 
 @never_cache
 def home(request):
@@ -46,27 +49,28 @@ def home(request):
     context['menu'] = Menu.get_current_menu_items()
     if request.method == 'POST':
             if 'logout' in request.POST and request.POST['logout'] == "1":
+                request.session.flush()
                 request.session['logged'] = False
                 request.session['user'] = ""
                 context['login_form'] = RetailerLogin()
-                return render(request, 'hotpot/home.html', context)
+                return render_with_middleware(request, 'hotpot/home.html', context)
 
             login_form = RetailerLogin(request.POST)
             if login_form.is_valid():
-                print "Login form valid"
+                request.session.flush()
                 request.session['logged'] = True
                 request.session['user'] = Retailer.objects.get(password=login_form.data['password']).__str__()
     else:
         login_form = RetailerLogin()
     context['login_form'] = login_form
-    return render(request, 'hotpot/home.html', context)
+    return render_with_middleware(request, 'hotpot/home.html', context)
 
 
 @never_cache
 def buy(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
-    return render(request, 'hotpot/buy.html', context)
+    return render_with_middleware(request, 'hotpot/buy.html', context)
 
 
 @never_cache
@@ -81,12 +85,12 @@ def checkout(request):
             for item in context['cart']:
                 OrderItem.objects.create(order=f, item=item.product, amount=item.quantity)
             request.session.flush()
-            return render(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
+            return render_with_middleware(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
     else:
         order_form = OrderForm()
     context['order_form'] = order_form
     context['menu'] = Menu.get_current_menu_items()
-    return render(request, 'hotpot/checkout.html', context)
+    return render_with_middleware(request, 'hotpot/checkout.html', context)
 
 
 def finish(context):

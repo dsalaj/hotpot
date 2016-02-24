@@ -37,14 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'solo.apps.SoloAppConfig',
     'cart',
     'hotpot',
+    'newsletter',
 ]
 
+SITE_ID = 1
+
 MIDDLEWARE_CLASSES = [
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -141,3 +145,5 @@ DEFAULT_TO_EMAIL = 'salaj.au@gmail.com'
 
 DATETIME_FORMAT = 'd.m.Y - H:i:s'
 USE_L10N = False
+
+LINK_PREFIX = 'https://'

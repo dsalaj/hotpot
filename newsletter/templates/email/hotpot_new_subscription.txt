@@ -1,0 +1,9 @@
+{% load humanize %}{% load i18n %}{% blocktrans%}Hello,
+
+a new email has been added to newsletter subscriptions.{% endblocktrans %}
+
+{% trans "Email:" %} "{{ subscriber_email }}"
+{% blocktrans %}
+You can edit subscriptions in admin page:{% endblocktrans %}
+  {{site_uri}}/admin/newsletter/newslettersubscriber/
+

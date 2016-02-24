@@ -157,4 +157,3 @@ class DeliveryDays(models.Model):
     shipping = models.ForeignKey('Shipping')
     day = models.IntegerField(choices=DAY)
     time = models.TimeField()
-

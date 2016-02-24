@@ -31,7 +31,7 @@ def next_delivery_dates():
 
             days_tuple = days_tuple + ((date, str(dd.get_day_display()+' '+pretty_date(date))),)
     return days_tuple
-
+    # BACKUP CODE
     # tuesday = today + relativedelta.relativedelta(weekday=1)
     # wednesday = today + relativedelta.relativedelta(weekday=2)
     # return ((tuesday,'Dienstag '+pretty_date(tuesday)), (wednesday,'Mittwoch '+pretty_date(wednesday)))
