@@ -31,12 +31,13 @@
         {{ newsletter_form.email.errors }}
         {{ newsletter_form.email }}
         <button type="submit" class="button button-border button-light button-circle" value="submit">Subscribe Now</button>
-        <style>
-            .errorlist li { color: #FFF; }
-            .errorlist li::before { content: '*'; }
-        </style>
     </form>
     {% endif %}
+    <style>
+        .errorlist li { color: darkred; }
+        .errorlist li::before { content: '*'; }
+        .errorlist { display: none; }
+    </style>
 </div>
 </body>
 </html>

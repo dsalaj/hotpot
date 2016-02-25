@@ -1,13 +1,13 @@
-{% load humanize %}{% load i18n %}{% blocktrans%}Welcome to HOTPOT!
+{% load i18n %}Welcome to HOTPOT!
 
 Thank you for subscribing to our newsletter!
 
 In order for us to keep you updated about our latest news and menüs,
-you have to activate your subscription by following this link:{% endblocktrans %}
+you have to activate your subscription by following this link:
 
-{{site_uri}}/newsletter/?action=confirm&subscriber={{subscriber_hash}}&email={{subscriber_email}}
+{{site_uri}}/?action=confirm&subscriber={{subscriber_hash}}&email={{subscriber_email}}
 
 --
 To deactivate your subscription, click on this link:
-{{site_uri}}/newsletter/?action=unsubscribe&subscriber={{subscriber_hash}}&email={{subscriber_email}}
+{{site_uri}}/?action=unsubscribe&subscriber={{subscriber_hash}}&email={{subscriber_email}}
 

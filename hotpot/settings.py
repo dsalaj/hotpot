@@ -135,6 +135,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(os.path.join(BASE_DIR, 'static'), 'uploads')
 MEDIA_URL = '/static/uploads/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

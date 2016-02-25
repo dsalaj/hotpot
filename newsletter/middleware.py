@@ -11,9 +11,6 @@ logger = logging.getLogger('demabu.' + __name__)
 
 
 def newsletter_view_helper(request, view_context):
-    if not hasattr(request, 'session'):
-        raise ImproperlyConfigured("django.contrib.sessions.middleware.SessionMiddleware"
-                                   " must be before UserMiddleware in MIDDLEWARE_CLASSES")
     context = {}
     context['subscribed'] = False
 
@@ -45,14 +42,14 @@ def newsletter_view_helper(request, view_context):
             email = newsletter_form.cleaned_data['email']
             NewsletterSubscriber.objects.create(email=email)
             context['subscribed'] = True
-            send_newsletter_subscription_mail(email, createNewsletterHash(email))
+            send_newsletter_subscription_mail(email, createNewsletterHash(email), request.META['HTTP_HOST'])
     else:
         newsletter_form = NewsletterForm()
     context['newsletter_form'] = newsletter_form
     view_context.update(context)
 
 
-def send_newsletter_subscription_mail(email, hash):
+def send_newsletter_subscription_mail(email, hash, host):
     try:
         connection = mail.get_connection()
     except SMTPException as e:
@@ -62,7 +59,8 @@ def send_newsletter_subscription_mail(email, hash):
 
     sender_address = settings.DEFAULT_FROM_EMAIL
     mail_list = []
-    site_uri = settings.LINK_PREFIX + Site.objects.get_current().domain
+    #site_uri = settings.LINK_PREFIX + Site.objects.get_current().domain
+    site_uri = host
 
     # hotpot new newsletter subscription email
     hotpot_context = { 'subscriber_email': email, 'site_uri': site_uri }
