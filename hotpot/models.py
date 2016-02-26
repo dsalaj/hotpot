@@ -79,20 +79,10 @@ class OrderItem(models.Model):
     amount = models.IntegerField()
 
 
-class Coupon(models.Model):
-    PERCENTAGE = 1
-    CURRENCY = 2
-    TYPE = (
-        (PERCENTAGE, 'percentage'),
-        (CURRENCY, 'value')
-    )
-    coupon_type = models.IntegerField(choices=TYPE)
-    value = models.FloatField()
-    order = models.ForeignKey('Order')
-
-
 class Order(models.Model):
-    order_number = models.AutoField(primary_key=True)
+    order_year = models.DateField(default=datetime.date.today)
+    order_number = models.IntegerField(unique_for_year=order_year)
+
     timestamp = models.DateTimeField(default=timezone.now)
     delivery_date = models.DateField()
     title = models.CharField(max_length=255, blank=True)
@@ -108,26 +98,25 @@ class Order(models.Model):
     def __str__(self):
         return str(self.timestamp) + ' ' + str(self.email)
 
+    @property
+    def serial_number(self):
+        return str(self.order_year.year)+'/'+str(self.order_number)
+
+    class Meta:
+        unique_together = ('order_year', 'order_number',)
+
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            o = Order.objects.filter(order_year__year=datetime.date.today().year).order_by('order_number').last()
+            self.order_number = o.order_number + 1
+        super(Order, self).save(*args, **kwargs)
+
 
 class Retailer(models.Model):
     password = models.CharField(max_length=40)
 
     def __str__(self):
         return self.password
-
-
-class UserMiddleware(object):
-    @staticmethod
-    def process_request(request):
-        if not hasattr(request, 'session'):
-            raise ImproperlyConfigured("django.contrib.sessions.middleware.SessionMiddleware"
-                                       " must be before UserMiddleware in MIDDLEWARE_CLASSES")
-        if not 'user' in request.session.keys():
-            request.session['user'] = ""
-        if float(Cart(request).summary()) < Shipping.objects.get().treshold:
-            request.session['shipping_cost'] = str(Shipping.objects.get().price)
-        else:
-            request.session['shipping_cost'] = None
 
 
 class Shipping(SingletonModel):

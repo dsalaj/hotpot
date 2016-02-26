@@ -55,7 +55,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'hotpot.models.UserMiddleware',
 ]
 
 ROOT_URLCONF = 'hotpot.urls'
@@ -71,6 +70,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'hotpot.context_processors.retailer_login_helper',
+                'hotpot.context_processors.shipping_helper',
+                'newsletter.context_processors.newsletter_view_helper',
             ],
         },
     },

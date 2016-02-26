@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger('demabu.' + __name__)
 
 
-def newsletter_view_helper(request, view_context):
+def newsletter_view_helper(request):
     context = {}
     context['subscribed'] = False
 
@@ -46,7 +46,7 @@ def newsletter_view_helper(request, view_context):
     else:
         newsletter_form = NewsletterForm()
     context['newsletter_form'] = newsletter_form
-    view_context.update(context)
+    return context
 
 
 def send_newsletter_subscription_mail(email, hash, host):

@@ -33,7 +33,6 @@ class ShippingAdmin(SingletonModelAdmin):
 admin.site.register(Category)
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(Coupon)
 admin.site.register(Menu)
 admin.site.register(Retailer)
 admin.site.register(Shipping, ShippingAdmin)

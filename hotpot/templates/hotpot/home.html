@@ -3,32 +3,62 @@
 
 {% block body %}
     <h1>Hotpot app</h1>
-    {% if request.session.logged %}
-        <p>You are logged in as {{ request.session.user }}</p>
-        <form method="post" id="logout_form">
+    <div style="display: inline-block; width: 45%;">
+        {% if menu %}
+            <h2>Current Menü</h2>
+            <ul>
+                {% for item in menu %}
+                    <li>
+                        {{ item.name }} -
+                        {{ item|retailer_price:request.session.user }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="/buy/">Order some Hotpots!</a>
+        {% else %}
+            <h2>No menus defined for this week!</h2>
+            <p>Please contact...</p>
+        {% endif %}
+    </div>
+    <div style="display: inline-block; width: 45%;">
+        {% if request.session.logged %}
+            <p>You are logged in as {{ request.session.user }}</p>
+            <form method="post" id="logout_form">
+                {% csrf_token %}
+                <button name="logout" type="submit" value="1">Logout</button>
+            </form>
+        {% else %}
+            <form method="post" id="login_form">
+                {% csrf_token %}
+                {{ login_form.as_table }}
+                <button type="submit">Login</button>
+            </form>
+        {% endif %}
+        <hr>
+        {% if not subscribed and not activated and not unsubscribed and not invalid %}
+            <span style="font-size:20px;" class="notopmargin">Subscribe to our free newsletter and get the latest news and updates.</span>
+        {% elif activated %}
+            <span style="font-size:20px;" class="notopmargin">You have successfully activated your subscription to our newsletter.</span>
+        {% elif unsubscribed %}
+            <span style="font-size:20px;" class="notopmargin">You have successfully unsubscribed from our newsletter. To subscribe again, follow the activation link in your confirmation email.</span>
+        {% elif subscribed %}
+            <span style="font-size:20px;" class="notopmargin">Thank you for subscribing to our newsletter! We will inform you on any news and updates.</span>
+        {% elif invalid %}
+            <span style="font-size:20px;" class="notopmargin">You followed a link that is invalid or expired.</span>
+        {% endif %}
+
+        {% if not subscribed and not activated and not unsubscribed and not invalid %}
+        <form id="slider-subscribe-form" enctype="multipart/form-data" method="post" class="nobottommargin divcenter" style="max-width: 500px;">
             {% csrf_token %}
-            <button name="logout" type="submit" value="1">Logout</button>
+            {{ newsletter_form.email.errors }}
+            {{ newsletter_form.email }}
+            <button type="submit" class="button button-border button-light button-circle" value="submit">Subscribe Now</button>
         </form>
-    {% else %}
-        <form method="post" id="login_form">
-            {% csrf_token %}
-            {{ login_form.as_table }}
-            <button type="submit">Login</button>
-        </form>
-    {% endif %}
-    {% if menu %}
-        <h2>Current Menü</h2>
-        <ul>
-            {% for item in menu %}
-                <li>
-                    {{ item.name }} -
-                    {{ item|retailer_price:request.session.user }}
-                </li>
-            {% endfor %}
-        </ul>
-        <a href="/buy/">Order some Hotpots!</a>
-    {% else %}
-        <h2>No menus defined for this week!</h2>
-        <p>Please contact...</p>
-    {% endif %}
+        {% endif %}
+        <style>
+            .errorlist li { color: darkred; }
+            .errorlist li::before { content: '*'; }
+            .errorlist { display: none; }
+        </style>
+    </div>
 {% endblock %}

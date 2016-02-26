@@ -6,38 +6,15 @@
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 </head>
 <body>
+<nav style="width: 100%; height: 3em;">
+    <a href="/">home</a>
+    <a href="/buy">buy</a>
+</nav>
 
 <div style="display: inline-block; width: 45%;">
     <img src="/static/hp_logo_invoice.png" width="200">
     {% block body %}
     {% endblock %}
-</div>
-<div style="display: inline-block; width: 45%;">
-    {% if not subscribed and not activated and not unsubscribed and not invalid %}
-        <span style="font-size:20px;" class="notopmargin">Subscribe to our free newsletter and get the latest news and updates.</span>
-    {% elif activated %}
-        <span style="font-size:20px;" class="notopmargin">You have successfully activated your subscription to our newsletter.</span>
-    {% elif unsubscribed %}
-        <span style="font-size:20px;" class="notopmargin">You have successfully unsubscribed from our newsletter. To subscribe again, follow the activation link in your confirmation email.</span>
-    {% elif subscribed %}
-        <span style="font-size:20px;" class="notopmargin">Thank you for subscribing to our newsletter! We will inform you on any news and updates.</span>
-    {% elif invalid %}
-        <span style="font-size:20px;" class="notopmargin">You followed a link that is invalid or expired.</span>
-    {% endif %}
-
-    {% if not subscribed and not activated and not unsubscribed and not invalid %}
-    <form id="slider-subscribe-form" enctype="multipart/form-data" method="post" class="nobottommargin divcenter" style="max-width: 500px;">
-        {% csrf_token %}
-        {{ newsletter_form.email.errors }}
-        {{ newsletter_form.email }}
-        <button type="submit" class="button button-border button-light button-circle" value="submit">Subscribe Now</button>
-    </form>
-    {% endif %}
-    <style>
-        .errorlist li { color: darkred; }
-        .errorlist li::before { content: '*'; }
-        .errorlist { display: none; }
-    </style>
 </div>
 </body>
 </html>

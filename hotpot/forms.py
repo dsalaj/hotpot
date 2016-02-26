@@ -44,7 +44,7 @@ class OrderForm(ModelForm):
 
     class Meta:
         model = Order
-        exclude = ['order_number', 'timestamp']
+        exclude = ['order_number', 'timestamp', 'order_year']
         #widgets = {'delivery_date': RadioSelect(choices=next_delivery_dates())}
 
 
