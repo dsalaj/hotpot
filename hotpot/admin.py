@@ -18,8 +18,8 @@ class OrderItemAdmin(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    exclude = ('timestamp', 'order_number',)
-    readonly_fields = ('timestamp', 'order_number',)
+    exclude = ('timestamp', 'order_number', 'order_year')
+    readonly_fields = ('timestamp', 'serial_number',)
     inlines = [OrderItemAdmin, ]
 
 

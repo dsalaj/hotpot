@@ -93,7 +93,7 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     zip = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
-    note = models.TextField(max_length=2047)
+    note = models.TextField(max_length=2047, blank=True)
 
     def __str__(self):
         return str(self.timestamp) + ' ' + str(self.email)
@@ -108,7 +108,10 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         if not self.order_number:
             o = Order.objects.filter(order_year__year=datetime.date.today().year).order_by('order_number').last()
-            self.order_number = o.order_number + 1
+            if o is not None:
+                self.order_number = o.order_number + 1
+            else:
+                self.order_number = 1
         super(Order, self).save(*args, **kwargs)
 
 

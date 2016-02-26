@@ -29,7 +29,7 @@ def next_delivery_dates():
         if date > now and (end_menu_time > date or
            (date - end_menu_time) < ((end_menu_time + relativedelta.relativedelta(hours=25)) - end_menu_time)):
 
-            days_tuple = days_tuple + ((date, str(dd.get_day_display()+' '+pretty_date(date))),)
+            days_tuple = days_tuple + ((date.date(), str(dd.get_day_display()+' '+pretty_date(date))),)
     return days_tuple
     # BACKUP CODE
     # tuesday = today + relativedelta.relativedelta(weekday=1)
