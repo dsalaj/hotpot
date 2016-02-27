@@ -31,6 +31,13 @@ class Cart:
         request.session[CART_ID] = cart.id
         return cart
 
+    def get_qty(self, product):
+        try:
+            item = models.Item.objects.get(cart=self.cart, product=product)
+            return item.quantity
+        except models.Item.DoesNotExist:
+            return 0
+
     def add(self, product, unit_price, quantity=1):
         try:
             item = models.Item.objects.get(

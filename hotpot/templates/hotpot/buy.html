@@ -39,6 +39,11 @@
             </tr>
         {% endif %}
     </table>
+    {% if request.session.quantity_error %}
+    <ul class="errorlist">
+        <li>Can not add that quantity of item "{{ request.session.quantity_error_item }}". Only {{ request.session.quantity_error }} are left in stock!</li>
+    </ul>
+    {% endif %}
     <script>
         $('.add').click(function() {
             var item = $(this).attr('data-menu-item');

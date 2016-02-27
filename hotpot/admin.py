@@ -27,12 +27,21 @@ class DeliveryDayAdmin(admin.TabularInline):
     model = DeliveryDays
     extra = 0
 
+
 class ShippingAdmin(SingletonModelAdmin):
     inlines = [DeliveryDayAdmin, ]
+
+
+class ItemBatchAdmin(admin.TabularInline):
+    model = ItemBatch
+    extra = 0
+
+class MenuAdmin(admin.ModelAdmin):
+    inlines = [ItemBatchAdmin, ]
 
 admin.site.register(Category)
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(Menu)
+admin.site.register(Menu, MenuAdmin)
 admin.site.register(Retailer)
 admin.site.register(Shipping, ShippingAdmin)

@@ -2,11 +2,12 @@
 from django.shortcuts import render
 from hotpot.models import *
 from hotpot.forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import easy_pdf
 from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
 from django.core.mail import send_mail, EmailMessage
 from django.views.decorators.cache import never_cache
+from cart.cart import Cart
 
 def pdf_preview(request):
     response = HttpResponse(content_type='application/pdf')
@@ -20,8 +21,19 @@ def pdf_preview(request):
 def add_to_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
-    cart.add(product, product.retailer_price(request.session['user']), quantity)
-    print("added thing to cart")
+    batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
+    print str(batch_item.amount) + " " + str(quantity)
+    if batch_item.amount >= int(quantity) + int(cart.get_qty(product)):
+        cart.add(product, product.retailer_price(request.session['user']), quantity)
+        print("added thing to cart")
+        request.session['quantity_error'] = None
+        request.session['quantity_error_item'] = None
+        return JsonResponse({"return": "ok"})
+    else:
+        request.session['quantity_error'] = batch_item.amount
+        request.session['quantity_error_item'] = product.name
+        print("add to cart q FAILED " + str(request.session['quantity_error']))
+        return JsonResponse({"return": "fail"})
 
 
 def remove_from_cart(request, product_id):
@@ -34,8 +46,16 @@ def remove_from_cart(request, product_id):
 def change_in_cart(request, product_id, quantity):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
-    cart.update(product, quantity, product.retailer_price(request.session['user']))
-    print("changed thing in cart")
+    batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
+    if batch_item.amount >= int(quantity):
+        cart.update(product, quantity, product.retailer_price(request.session['user']))
+        print("changed thing in cart")
+        request.session['quantity_error'] = None
+        request.session['quantity_error_item'] = None
+    else:
+        request.session['quantity_error'] = batch_item.amount
+        request.session['quantity_error_item'] = product
+        print("change in cart q FAILED")
 
 def render_with_middleware(request, html, context):
     #newsletter_view_helper(request, context)
@@ -64,11 +84,16 @@ def checkout(request):
     if request.method == 'POST':
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
+            batch = Menu.get_current_menu().itembatch_set
             f = order_form.save(commit=False)
             f.save()
             finish({'order': f, 'cart': context['cart']})
             for item in context['cart']:
                 OrderItem.objects.create(order=f, item=item.product, amount=item.quantity)
+                item_batch = batch.get(item=item.product)
+                item_batch.amount -= item.quantity
+                item_batch.full_clean() #FIXME
+                item_batch.save()
             request.session.flush()
             return render_with_middleware(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
     else:

@@ -31,7 +31,7 @@ def next_delivery_dates():
 
             days_tuple = days_tuple + ((date.date(), str(dd.get_day_display()+' '+pretty_date(date))),)
     return days_tuple
-    # BACKUP CODE
+    # BACKUP HARDCODED DAYS
     # tuesday = today + relativedelta.relativedelta(weekday=1)
     # wednesday = today + relativedelta.relativedelta(weekday=2)
     # return ((tuesday,'Dienstag '+pretty_date(tuesday)), (wednesday,'Mittwoch '+pretty_date(wednesday)))
@@ -45,7 +45,6 @@ class OrderForm(ModelForm):
     class Meta:
         model = Order
         exclude = ['order_number', 'timestamp', 'order_year']
-        #widgets = {'delivery_date': RadioSelect(choices=next_delivery_dates())}
 
 
 class RetailerLogin(ModelForm):
@@ -55,6 +54,7 @@ class RetailerLogin(ModelForm):
 
     def clean_password(self):
         data = self.cleaned_data['password']
-        if data not in Retailer.objects.all().__str__():
+        passwords = [r.password for r in Retailer.objects.all()]
+        if data not in passwords:
             raise forms.ValidationError("Wrong password!")
         return data

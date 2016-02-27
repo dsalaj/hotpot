@@ -2,9 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
-from django.core.exceptions import ImproperlyConfigured
 from solo.models import SingletonModel
-from cart.cart import Cart
 import datetime
 
 
@@ -42,8 +40,17 @@ class Category(models.Model):
         return self.name
 
 
+class ItemBatch(models.Model):
+    item = models.ForeignKey('MenuItem')
+    amount = models.PositiveIntegerField()
+    menu = models.ForeignKey('Menu')
+
+    class Meta:
+        unique_together = ('item', 'menu',)
+
+
 class Menu(models.Model):
-    items = models.ManyToManyField('MenuItem')
+    #items = models.ManyToManyField('ItemBatch')
     time_from = models.DateTimeField()
     time_to = models.DateTimeField()
 
@@ -51,13 +58,17 @@ class Menu(models.Model):
         return 'FROM ' + str(self.time_from.date()) + ' TO ' + str(self.time_to.date())
 
     @staticmethod
-    def get_current_menu_items():
+    def get_current_menu():
         now = datetime.datetime.now()
         try:
             menu = Menu.objects.get(time_from__lte=now, time_to__gte=now)
+            return menu
         except ObjectDoesNotExist:
             return None
-        return menu.items.all()
+
+    @staticmethod
+    def get_current_menu_items():
+        return [i.item for i in Menu.get_current_menu().itembatch_set.all()]
 
     def clean(self):
         time_from = self.time_from
