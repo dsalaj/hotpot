@@ -8,7 +8,8 @@ from easy_pdf.views import PDFTemplateView # needed for easy_pdf.rendering !
 from django.core.mail import send_mail, EmailMessage
 from django.views.decorators.cache import never_cache
 from cart.cart import Cart
-
+from decimal import Decimal
+import os
 
 def add_to_cart(request, product_id, quantity):
     if int(quantity) > 0:
@@ -80,15 +81,25 @@ def checkout(request):
             batch = Menu.get_current_menu().itembatch_set
             order = order_form.save()
             for item in context['cart']:
-                OrderItem.objects.create(order=order, item=item.product, amount=item.quantity)
+                OrderItem.objects.create(order=order,
+                                         item=item.product,
+                                         amount=item.quantity,
+                                         total_price=item.total_price)
                 item_batch = batch.get(item=item.product)
                 print "Item " + str(item_batch.item.name) + " amount = " + str(item_batch.amount) + " - " + str(item.quantity)
                 item_batch.amount = item_batch.amount - item.quantity
                 print "Item " + str(item_batch.item.name) + " amount = " + str(item_batch.amount)
                 item_batch.full_clean() #FIXME
                 item_batch.save()
+            order.total_price = sum([i.total_price for i in OrderItem.objects.filter(order=order)])
+            if request.session['shipping_cost'] is not None:
+                shipping = float(request.session['shipping_cost'])
+                order.total_price += Decimal(shipping)
+            else:
+                shipping = 0
+            order.save()
             #finish(generate_invoice_pdf({'order': order}))
-            return pdf_preview(generate_invoice_pdf(order))
+            return pdf_preview(generate_invoice_pdf(order, shipping))
             request.session.flush()
             return render_with_middleware(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
     else:
@@ -111,12 +122,22 @@ def finish(pdf):
     print "email sent"
 
 
-def generate_invoice_pdf(order):
+def generate_invoice_pdf(order, shipping):
     context = {}
     context['date'] = datetime.date.today().strftime('%d.%m.%Y')
     context['delivery_date'] = order.delivery_date.strftime('%d.%m.%Y')
     context['invoice_number'] = order.serial_number
     context['order_items'] = order.orderitem_set.all()
+    context['total_order_items'] = sum(o.amount for o in context['order_items'])
+    context['order'] = order
+    context['cwd'] = os.getcwd()
+    if shipping == 0:
+        context['mwst10'] = Decimal(order.total_price * 0.1).quantize(Decimal('0.01'))
+        context['mwst20'] = Decimal(0).quantize(Decimal('0.01'))
+    else:
+        context['mwst10'] = Decimal((float(order.total_price) - shipping) * 0.1).quantize(Decimal('0.01'))
+        context['mwst20'] = Decimal(shipping * 0.2).quantize(Decimal('0.01'))
+        context['shipping'] = Decimal(shipping).quantize(Decimal('0.01'))
     return easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
 
 

@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <style type="text/css">
             @page {
-
+                background-image: url('{{ cwd }}/static/hp_logo_invoice_bg.png');
                 size: {{ pagesize }};
                 margin: 1cm;
                 @frame footer {
@@ -65,11 +65,17 @@
             {% for order_item in order_items %}
                 <li>{{ order_item.amount }} - {{ order_item.item.name }} -- € {{ order_item.total_price }}</li>
             {% endfor %}
+            {% if shipping %}
+                <li>1 - Versand -- € {{ shipping }}</li>
+            {% endif %}
           </ul>
         </div>
         <div class="container" style="font-size: 1.2em;">
-          <p style="text-align: center; width: 100%;">8 Hotpots ..............................................€ 59,50</p>
-          <p style="text-align: center; width: 100%;">(dieser Betrag beinhaltet 10% MwSt.: € 5,41)</p>
+          <p style="text-align: center; width: 100%; margin: 0px;">{{ total_order_items }} Hotpots ..............................................€ {{ order.total_price }}</p>
+          <p style="text-align: center; width: 100%; margin: 0px;">(dieser Betrag beinhaltet 10% MwSt.: € {{ mwst10 }})</p>
+          {% if mwst20 %}
+              <p style="text-align: center; width: 100%;  margin: 0px;">(dieser Betrag beinhaltet 20% MwSt.: € {{ mwst20 }})</p>
+          {% endif %}
         </div>
         <div class="container" style="font-size: 1.2em;">
           <p>Mit lieben Grüßen</p>

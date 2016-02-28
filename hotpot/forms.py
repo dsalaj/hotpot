@@ -44,7 +44,7 @@ class OrderForm(ModelForm):
 
     class Meta:
         model = Order
-        exclude = ['order_number', 'timestamp', 'order_year']
+        exclude = ['order_number', 'timestamp', 'order_year', 'total_price']
 
 
 class RetailerLogin(ModelForm):

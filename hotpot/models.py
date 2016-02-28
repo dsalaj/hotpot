@@ -88,6 +88,7 @@ class OrderItem(models.Model):
     item = models.ForeignKey('MenuItem')
     retailer = models.ForeignKey('Retailer', null=True)
     amount = models.IntegerField()
+    total_price = models.DecimalField(decimal_places=2, max_digits=8)
 
 
 class Order(models.Model):
@@ -105,6 +106,7 @@ class Order(models.Model):
     zip = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
     note = models.TextField(max_length=2047, blank=True)
+    total_price = models.DecimalField(decimal_places=2, max_digits=8, null=True)
 
     @property
     def serial_number(self):
