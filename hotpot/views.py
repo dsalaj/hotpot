@@ -9,31 +9,21 @@ from django.core.mail import send_mail, EmailMessage
 from django.views.decorators.cache import never_cache
 from cart.cart import Cart
 
-def pdf_preview(request):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
-    context = dict(cart=Cart(request))
-    pdfres = easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
-    response.write(pdfres)
-    return HttpResponse(response.getvalue(), content_type='application/pdf')
-
 
 def add_to_cart(request, product_id, quantity):
-    product = MenuItem.objects.get(id=product_id)
-    cart = Cart(request)
-    batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
-    print str(batch_item.amount) + " " + str(quantity)
-    if batch_item.amount >= int(quantity) + int(cart.get_qty(product)):
-        cart.add(product, product.retailer_price(request.session['user']), quantity)
-        print("added thing to cart")
-        request.session['quantity_error'] = None
-        request.session['quantity_error_item'] = None
-        return JsonResponse({"return": "ok"})
-    else:
-        request.session['quantity_error'] = batch_item.amount
-        request.session['quantity_error_item'] = product.name
-        print("add to cart q FAILED " + str(request.session['quantity_error']))
-        return JsonResponse({"return": "fail"})
+    if int(quantity) > 0:
+        product = MenuItem.objects.get(id=product_id)
+        cart = Cart(request)
+        batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
+        if batch_item.amount >= int(quantity) + int(cart.get_qty(product)):
+            cart.add(product, product.retailer_price(request.session['user']), quantity)
+            request.session['quantity_error'] = None
+            request.session['quantity_error_item'] = None
+            return JsonResponse({"return": "ok"})
+        else:
+            request.session['quantity_error'] = batch_item.amount
+            request.session['quantity_error_item'] = product.name
+            return JsonResponse({"return": "fail"})
 
 
 def remove_from_cart(request, product_id):
@@ -44,18 +34,21 @@ def remove_from_cart(request, product_id):
 
 
 def change_in_cart(request, product_id, quantity):
-    product = MenuItem.objects.get(id=product_id)
-    cart = Cart(request)
-    batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
-    if batch_item.amount >= int(quantity):
-        cart.update(product, quantity, product.retailer_price(request.session['user']))
-        print("changed thing in cart")
-        request.session['quantity_error'] = None
-        request.session['quantity_error_item'] = None
+    if int(quantity) > 0:
+        product = MenuItem.objects.get(id=product_id)
+        cart = Cart(request)
+        batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
+        if batch_item.amount >= int(quantity):
+            cart.update(product, quantity, product.retailer_price(request.session['user']))
+            print("changed thing in cart")
+            request.session['quantity_error'] = None
+            request.session['quantity_error_item'] = None
+        else:
+            request.session['quantity_error'] = batch_item.amount
+            request.session['quantity_error_item'] = product
+            print("change in cart q FAILED")
     else:
-        request.session['quantity_error'] = batch_item.amount
-        request.session['quantity_error_item'] = product
-        print("change in cart q FAILED")
+        remove_from_cart(request, product_id)
 
 def render_with_middleware(request, html, context):
     #newsletter_view_helper(request, context)
@@ -85,15 +78,17 @@ def checkout(request):
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
             batch = Menu.get_current_menu().itembatch_set
-            f = order_form.save(commit=False)
-            f.save()
-            finish({'order': f, 'cart': context['cart']})
+            order = order_form.save()
             for item in context['cart']:
-                OrderItem.objects.create(order=f, item=item.product, amount=item.quantity)
+                OrderItem.objects.create(order=order, item=item.product, amount=item.quantity)
                 item_batch = batch.get(item=item.product)
-                item_batch.amount -= item.quantity
+                print "Item " + str(item_batch.item.name) + " amount = " + str(item_batch.amount) + " - " + str(item.quantity)
+                item_batch.amount = item_batch.amount - item.quantity
+                print "Item " + str(item_batch.item.name) + " amount = " + str(item_batch.amount)
                 item_batch.full_clean() #FIXME
                 item_batch.save()
+            #finish(generate_invoice_pdf({'order': order}))
+            return pdf_preview(generate_invoice_pdf(order))
             request.session.flush()
             return render_with_middleware(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
     else:
@@ -103,15 +98,31 @@ def checkout(request):
     return render_with_middleware(request, 'hotpot/checkout.html', context)
 
 
-def finish(context):
+def finish(pdf):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
-    pdfres = easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
+    response.write(pdf)
     print "pdf invoice rendered"
-    response.write(pdfres)
     email = EmailMessage('Hello', 'Here is the message with pdf.', 'hotpot.graz@gmail.com',
                          ['salaj.au@gmail.com', 'frost_master@hotmail.com'])
-    email.attach('invoicex.pdf', response.getvalue(), 'application/pdf')
+    email.attach('hotpot_invoice.pdf', response.getvalue(), 'application/pdf')
     print "pdf attached to email"
     email.send(fail_silently=False)
     print "email sent"
+
+
+def generate_invoice_pdf(order):
+    context = {}
+    context['date'] = datetime.date.today().strftime('%d.%m.%Y')
+    context['delivery_date'] = order.delivery_date.strftime('%d.%m.%Y')
+    context['invoice_number'] = order.serial_number
+    context['order_items'] = order.orderitem_set.all()
+    return easy_pdf.rendering.render_to_pdf("pdf/pdfkit_test.html", context, encoding=u'utf-8')
+
+
+def pdf_preview(pdf):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
+    response.write(pdf)
+    return HttpResponse(response.getvalue(), content_type='application/pdf')
+

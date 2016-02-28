@@ -106,12 +106,12 @@ class Order(models.Model):
     place = models.CharField(max_length=255)
     note = models.TextField(max_length=2047, blank=True)
 
-    def __str__(self):
-        return str(self.timestamp) + ' ' + str(self.email)
-
     @property
     def serial_number(self):
         return str(self.order_year.year)+'/'+str(self.order_number)
+
+    def __str__(self):
+        return self.serial_number + ' - ' + str(self.email)
 
     class Meta:
         unique_together = ('order_year', 'order_number',)

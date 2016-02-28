@@ -49,27 +49,21 @@
             <div>8045 Graz</div>
           </div>
           <div style="display: inline-block; text-align: right; position: absolute; right: 1em;">
-            <div>Graz, 04.02.2016</div>
-            <div>Rechnungs Nr.: 19/16</div>
+            <div>Graz, {{ date }}</div>
+            <div>Rechnungs Nr.: {{ invoice_number }}</div>
           </div>
         </div>
         <div class="container" style="font-size: 1.4em;">
-          <h4 style="text-weight: bold; text-decoration: underline;">Betrifft: Hotpot Zustellung Bestellnr.: 11135</h4>
+          <h4 style="text-weight: bold; text-decoration: underline;">Betrifft: Hotpot Zustellung am: {{ delivery_date }}</h4>
         </div>
         <div class="container" style="font-size: 1.6em;">
           <h1 style="text-weight: bold; text-align: center; width: 100%;">Rechnung:</h1>
         </div>
         <div class="container" style="font-size: 1.2em;">
-          <p>Für die Zustellung versch. Hotpots Bestellnr.: 11135 erlauben wir uns, nachstehende Rechnung zu legen:></p>
+          <p>Für die Zustellung versch. Hotpots Bestellnr.: {{ invoice_number }} erlauben wir uns, nachstehende Rechnung zu legen:></p>
           <ul>
-            {% comment %}
-            <li>1 - Brokkoli - Erdnuss Suppe*  €  6.50</li>
-            <li>2 - Hokkaido -  Kokos Suppe*  €  13.00</li>
-            <li>1 - Orientalische Linsensuppe*  €  6.50</li>
-            <li>1 - Indische Dal Suppe**  €  6.50</li>
-            {% endcomment %}
-            {% for item in cart %}
-                <li>{{ item.product.name }} * {{ item.quantity }} = € {{ item.total_price }}</li>
+            {% for order_item in order_items %}
+                <li>{{ order_item.amount }} - {{ order_item.item.name }} -- € {{ order_item.total_price }}</li>
             {% endfor %}
           </ul>
         </div>

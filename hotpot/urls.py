@@ -26,5 +26,4 @@ urlpatterns = [
     url(r'^add/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.add_to_cart, name='add_to_cart'),
     url(r'^change/(?P<product_id>[0-9]+)/(?P<quantity>[0-9]+)/$', views.change_in_cart, name='change_in_cart'),
     url(r'^remove/(?P<product_id>[0-9]+)/$', views.remove_from_cart, name='remove_from_cart'),
-    url(r'^pdf/', views.pdf_preview, name='pdf_preview'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
