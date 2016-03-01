@@ -2,8 +2,8 @@
 {% load extras %}
 
 {% block body %}
+    <div class="text-center">
     <h1>Hotpot app</h1>
-    <div style="display: inline-block; width: 45%;">
         {% if menu %}
             <h2>Current Menü</h2>
             <ul>
@@ -19,21 +19,7 @@
             <h2>No menus defined for this week!</h2>
             <p>Please contact...</p>
         {% endif %}
-    </div>
-    <div style="display: inline-block; width: 45%;">
-        {% if request.session.logged %}
-            <p>You are logged in as {{ request.session.user }}</p>
-            <form method="post" id="logout_form">
-                {% csrf_token %}
-                <button name="logout" type="submit" value="1">Logout</button>
-            </form>
-        {% else %}
-            <form method="post" id="login_form">
-                {% csrf_token %}
-                {{ login_form.as_table }}
-                <button type="submit">Login</button>
-            </form>
-        {% endif %}
+
         <hr>
         {% if not subscribed and not activated and not unsubscribed and not invalid %}
             <span style="font-size:20px;" class="notopmargin">Subscribe to our free newsletter and get the latest news and updates.</span>
@@ -48,7 +34,7 @@
         {% endif %}
 
         {% if not subscribed and not activated and not unsubscribed and not invalid %}
-        <form id="slider-subscribe-form" enctype="multipart/form-data" method="post" class="nobottommargin divcenter" style="max-width: 500px;">
+        <form id="slider-subscribe-form" enctype="multipart/form-data" method="post" class="float-center" style="max-width: 500px;">
             {% csrf_token %}
             {{ newsletter_form.email.errors }}
             {{ newsletter_form.email }}
@@ -61,4 +47,28 @@
             .errorlist { display: none; }
         </style>
     </div>
+{% endblock %}
+
+{% block login %}
+  {% if request.session.logged %}
+    <form method="post" id="logout_form">
+        {% csrf_token %}
+        <div class="top-bar-right">
+            <ul class="menu">
+                <li><span style="margin-right: 1em;">You are logged in as {{ request.session.user }}</span></li>
+                <li><button name="logout" class="button" type="submit" value="1">Logout</button></li>
+            </ul>
+        </div>
+    </form>
+  {% else %}
+    <form method="post" id="login_form">
+        {% csrf_token %}
+        <div class="top-bar-right">
+            <ul class="menu">
+                {{ login_form.as_ul }}
+                <li><button class="button" type="submit">Login</button></li>
+            </ul>
+        </div>
+    </form>
+  {% endif %}
 {% endblock %}

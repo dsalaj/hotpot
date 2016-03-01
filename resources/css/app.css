@@ -1,0 +1,46 @@
+.menu label {
+    display: none;
+}
+
+.menu-text, h1, h2 {
+    font-family: 'Pacifico', cursive;
+}
+
+#footer {
+    background: #333 none repeat scroll 0% 0%;
+    padding: 24px 0px 10px;
+    color: #fff;
+    font-size: 0.8em;
+}
+
+.socicon-facebook {
+    font-size: 3em;
+    color: #333;
+}
+
+.facebook-bg {
+    width: 3.2em;
+    height: 3.2em;
+    background-color: #fff;
+    border-radius: 3.2em;
+}
+
+.img-block-1 {
+    padding: 2em 0em 1em;
+    background-image: url('/static/img/tom_pot.jpg');
+    background-attachment: fixed;
+    background-position: left top;
+    background-size: cover;
+    color: #fff;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.8em;
+    line-height: 1em;
+}
+
+.img-block-1 > div {
+    margin-bottom: 1em;
+}
+
+.padding-block-1 {
+    padding: 1.6em 0em;
+}
