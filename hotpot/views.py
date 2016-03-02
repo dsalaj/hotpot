@@ -11,6 +11,7 @@ from cart.cart import Cart
 from decimal import Decimal
 import os
 
+
 def add_to_cart(request, product_id, quantity):
     if int(quantity) > 0:
         product = MenuItem.objects.get(id=product_id)

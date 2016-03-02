@@ -1,53 +1,91 @@
 {% extends 'hotpot/base.html' %}
 
 {% block body %}
-    <h1>Hotpot app</h1>
-    <h2>Menü</h2>
-    <ul>
-        {% for item in menu %}
-            <li>
-                {{ item.name }} -
-                {{ item|retailer_price:request.session.user }}
-                -
-                {% if item|retailer_price:request.session.user != "undefined" %}
-                <input size="2" value="1" type="number">
-                <button class="add" data-menu-item="{{ item.pk }}">Add</button></li>
-                {% else %}
-                    <span>Contact the kitchen to request the price!</span>
-                {% endif %}
-        {% endfor %}
-    </ul>
-    <h2>Cart</h2>
-    <table>
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Total Price</th>
-        </tr>
-        {% for item in cart %}
+<div class="row padding-block-1">
+    <div class="columns small-12 medium-8">
+        <h2>Hotpots bestellen</h2>
+        <ul>
+            <li>Hotpot-Bestellungen werden jederzeit über unseren Online-Shop entgegengenommen.</li>
+            <li>Die Zustellung der Hotpots erfolgt ausnahmslos dienstags oder mittwochs zwischen 8.00 und 14.00 Uhr</li>
+            <li>Die Zustellung  am nächstfolgenden Zustelltag ist nur dann möglich, wenn die Bestellung bis spätestens um 14 Uhr des Vortages erfolgt.</li>
+            <li>Ab einem Bestellwert von € 50,– übernimmt Hotpot die Zustellgebühr.</li>
+            <li>Bei einem Bestellwert unter € 50,– beträgt die Zustellgebühr € 10,– inklusive 20% MwSt.</li>
+        </ul>
+        <p class="red-note">Folgende Hotpots können Sie bestellen.</p>
+        <p class="red-note">Änderungen vorbehalten!</p>
+
+        <table>
+          <thead>
             <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.total_price }}</td>
+                <th>Produkt</th>
+                <th width="100">Anzahl</th>
+                <th>Preis</th>
+                <th></th>
             </tr>
-        {% endfor %}
-        {% if request.session.shipping_cost %}
+          </thead>
+          <tbody>
+            {% for item in menu %}
             <tr>
-                <td>Shipping</td>
-                <td></td>
-                <td>{{ request.session.shipping_cost }}</td>
+                <td>
+                    <div>{{ item.name }}</div>
+                    <div>{{ item.description }}</div>
+                </td>
+                <td>
+                    {% if item|retailer_price:request.session.user != "undefined" %}
+                        <input size="2" value="1" type="number">
+                    {% endif %}
+                </td>
+                <td>€ {{ item|retailer_price:request.session.user }}</td>
+                <td>
+                    {% if item|retailer_price:request.session.user != "undefined" %}
+                        <button class="add button float-right" style="margin: 0px;"  data-menu-item="{{ item.pk }}">In den Warenkorb</button>
+                    {% else %}
+                        <span>Contact the kitchen to request the price!</span>
+                    {% endif %}
+                </td>
             </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
+    <div class="columns small-12 medium-4">
+        <h2>Cart</h2>
+        <table>
+            <tr>
+                <th>Artikel</th>
+                <th>Anzahl</th>
+                <th>Preis</th>
+                <th></th>
+            </tr>
+            {% for item in cart %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price }}</td>
+                    <td><button class="red-note remove" data-menu-item="{{ item.product.pk }}"><i class="fa-times fa"></i></button></td>
+                </tr>
+            {% endfor %}
+            {% if request.session.shipping_cost %}
+                <tr>
+                    <td>Shipping</td>
+                    <td></td>
+                    <td>{{ request.session.shipping_cost }}</td>
+                </tr>
+            {% endif %}
+        </table>
+        {% if request.session.quantity_error %}
+        <ul class="errorlist">
+            <li>Can not add that quantity of item "{{ request.session.quantity_error_item }}". Only {{ request.session.quantity_error }} are left in stock!</li>
+        </ul>
         {% endif %}
-    </table>
-    {% if request.session.quantity_error %}
-    <ul class="errorlist">
-        <li>Can not add that quantity of item "{{ request.session.quantity_error_item }}". Only {{ request.session.quantity_error }} are left in stock!</li>
-    </ul>
-    {% endif %}
+        <a href="/checkout/"><button class="button">Zur Kasse gehen</button></a>
+    </div>
+
     <script>
         $('.add').click(function() {
             var item = $(this).attr('data-menu-item');
-            var qty = $(this).parent().children('input').val();
+            var qty = $(this).parent().parent().children('td').children('input').val();
             $.ajax({
                 type: 'GET',
                 url:'/add/'+item+'/'+qty+'/'
@@ -55,7 +93,16 @@
                 location.reload();
             });
         });
+        $('.remove').click(function() {
+            var item = $(this).attr('data-menu-item');
+            $.ajax({
+                type: 'GET',
+                url:'/remove/'+item+'/'
+            }).always(function() {
+                location.reload();
+            });
+        });
     </script>
-    <hr>
-    <a href="/checkout/"><button>Buy</button></a>
+
+</div>
 {% endblock %}

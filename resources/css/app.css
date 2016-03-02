@@ -26,7 +26,7 @@
 }
 
 .padding-block-1 {
-    padding: 1.6em 0em;
+    padding: 3.4em 0em 1.6em;
 }
 .padding-block-2 {
     padding: 0.2em 0.2em;
@@ -111,3 +111,58 @@
     color: #D63017;
 }
 
+.top-bar, .is-anchored {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0px;
+    padding: 0px;
+}
+
+.sticky-container .top-bar, .sticky-container .top-bar ul {
+    background-color: #fff;
+}
+
+.sticky-container .top-bar input {
+    width: 160px;
+}
+
+.nav-bar {
+    background-color: #fff;
+    padding: 0.5em;
+}
+#logout_form, #login_form {
+    margin: 0.6em 0em auto 1em;
+    text-transform: none;
+}
+.menu-text {
+    text-transform: none;
+}
+
+a {
+    -webkit-transition: all 0.5s ease;
+}
+
+.red-note {
+    color: #d11;
+    font-weight: bold;
+    margin: 0em;
+}
+
+#id_delivery_date {
+    list-style-type: none;
+    margin-bottom: 0px;
+}
+
+.info-h {
+    font-family: 'Oswald', sans-serif;
+}
+
+.form-table input {
+    margin: 0px;
+}
+table.form-table * {
+    font-size: 1em;
+}
