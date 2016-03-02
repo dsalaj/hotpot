@@ -37,40 +37,37 @@ def remove_from_cart(request, product_id):
 
 def change_in_cart(request, product_id, quantity):
     if int(quantity) > 0:
+        print "in change"
         product = MenuItem.objects.get(id=product_id)
         cart = Cart(request)
         batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
         if batch_item.amount >= int(quantity):
             cart.update(product, quantity, product.retailer_price(request.session['user']))
-            print("changed thing in cart")
             request.session['quantity_error'] = None
             request.session['quantity_error_item'] = None
+            return JsonResponse({"return": "ok"})
         else:
             request.session['quantity_error'] = batch_item.amount
             request.session['quantity_error_item'] = product
-            print("change in cart q FAILED")
+            print "failed change"
+            return JsonResponse({"return": "fail"})
     else:
         remove_from_cart(request, product_id)
-
-def render_with_middleware(request, html, context):
-    #newsletter_view_helper(request, context)
-    #retailer_login_helper(request, context)
-    return render(request, html, context)
-
 
 
 @never_cache
 def home(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
-    return render_with_middleware(request, 'hotpot/home.html', context)
+    context['categories'] = Category.objects.all()
+    return render(request, 'hotpot/home.html', context)
 
 
 @never_cache
 def buy(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
-    return render_with_middleware(request, 'hotpot/buy.html', context)
+    return render(request, 'hotpot/buy.html', context)
 
 
 @never_cache
@@ -107,7 +104,7 @@ def checkout(request):
         order_form = OrderForm()
     context['order_form'] = order_form
     context['menu'] = Menu.get_current_menu_items()
-    return render_with_middleware(request, 'hotpot/checkout.html', context)
+    return render(request, 'hotpot/checkout.html', context)
 
 
 def finish(pdf):

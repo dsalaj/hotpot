@@ -166,3 +166,11 @@ a {
 table.form-table * {
     font-size: 1em;
 }
+
+.menu-item {
+    height: 102px;
+}
+
+.nomargin {
+    margin: 0px !important;
+}

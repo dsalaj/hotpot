@@ -55,31 +55,40 @@
 
         <div class="text-center">
             {% if menu %}
-                <div class="row text-center padding-block-1">
-                <h2>Current Menü</h2>
-                <div class="large-10 medium-12 small-12 small-centered partner-block">
-                    {% for item in menu %}
-                        <div class="columns large-3 medium-3 small-4 text-center text-s">
-                            <h5>{{ item.name }}</h5>
-                            <div class="divider-1"></div>
-                            <div>{{ item.description }}</div>
-                            <div class="divider-2"></div>
-                            <div>{{ item|retailer_price:request.session.user }}</div>
+                <h1>– Die 5-Elemente Küche –</h1>
+                {% for c in categories %}
+                <div class="row text-center">
+                    <h2>- {{ c }} -</h2>
+                    <div class="large-10 medium-12 small-12 small-centered partner-block">
+                        {% for item in menu %}
+                            {% if item.category == c %}
+                            <div class="menu-item columns large-3 medium-3 small-4 text-center text-s">
+                                <h5>{{ item.name }}</h5>
+                                <div class="divider-1"></div>
+                                <div>{{ item.description }}</div>
+                                <div class="divider-2"></div>
+                                <div>{{ item|retailer_price:request.session.user }}</div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="columns large-3 medium-3 small-4 nomargin">
                         </div>
-                    {% endfor %}
-                    <div class="columns large-3 medium-3 small-4 text-center text-s">
                     </div>
                 </div>
-                </div>
+                {% endfor %}
             {% else %}
                 <h2>No menus defined for this week!</h2>
                 <p>Please contact...</p>
             {% endif %}
-            <a href="/buy/" class="button">Order some Hotpots!</a>
+            <div class="text-s" style="margin-bottom: 1em;">
+                <div>* vegan</div>
+                <div>** vegetarisch</div>
+            </div>
+            <a href="/buy/" class="button">Jetzt bestellen!</a>
 
             <hr>
             {% if not subscribed and not activated and not unsubscribed and not invalid %}
-                <span style="font-size:20px;" class="notopmargin">Subscribe to our free newsletter and get the latest news and updates.</span>
+                <span style="font-size:20px;" class="notopmargin">In unserem Newsletter informieren wir Sie wöchentlich über unsere aktuellen Hotpots und Angebote.</span>
             {% elif activated %}
                 <span style="font-size:20px;" class="notopmargin">You have successfully activated your subscription to our newsletter.</span>
             {% elif unsubscribed %}
@@ -95,7 +104,7 @@
                 {% csrf_token %}
                 {{ newsletter_form.email.errors }}
                 {{ newsletter_form.email }}
-                <button type="submit" class="button button-border button-light button-circle" value="submit">Subscribe Now</button>
+                <button type="submit" class="button button-border button-light button-circle" value="submit">Anmelden</button>
             </form>
             {% endif %}
             <style>
