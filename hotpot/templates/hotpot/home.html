@@ -2,7 +2,7 @@
 {% load extras %}
 
 {% block body %}
-    <div class="img-block-1">
+    <div class="img-block-1 top-img-block">
         <div class="column large-12 medium-12 small-12 large-centered medium-centered small-centered">
             <img src="/static/hp_logo_white.png" width="200" style="display:block; margin:auto;">
         </div>
@@ -49,50 +49,56 @@
         <div class="clearfix"></div>
     </div>
 
-    <div class="text-center">
-    <h1>Hotpot app</h1>
-        {% if menu %}
-            <h2>Current Menü</h2>
-            <ul>
-                {% for item in menu %}
-                    <li>
-                        {{ item.name }} -
-                        {{ item|retailer_price:request.session.user }}
-                    </li>
-                {% endfor %}
-            </ul>
-            <a href="/buy/">Order some Hotpots!</a>
-        {% else %}
-            <h2>No menus defined for this week!</h2>
-            <p>Please contact...</p>
-        {% endif %}
+    <div class="row text-center padding-block-1">
+        <div class="column small-12 medium-12 large-12 large-centered medium-centered small-centered"></div>
+        <img src="/static/img/bowl-icon.png" width="75" style="display:block; margin:auto;">
 
-        <hr>
-        {% if not subscribed and not activated and not unsubscribed and not invalid %}
-            <span style="font-size:20px;" class="notopmargin">Subscribe to our free newsletter and get the latest news and updates.</span>
-        {% elif activated %}
-            <span style="font-size:20px;" class="notopmargin">You have successfully activated your subscription to our newsletter.</span>
-        {% elif unsubscribed %}
-            <span style="font-size:20px;" class="notopmargin">You have successfully unsubscribed from our newsletter. To subscribe again, follow the activation link in your confirmation email.</span>
-        {% elif subscribed %}
-            <span style="font-size:20px;" class="notopmargin">Thank you for subscribing to our newsletter! We will inform you on any news and updates.</span>
-        {% elif invalid %}
-            <span style="font-size:20px;" class="notopmargin">You followed a link that is invalid or expired.</span>
-        {% endif %}
+        <div class="text-center">
+        <h1>Hotpot app</h1>
+            {% if menu %}
+                <h2>Current Menü</h2>
+               ''
+                <ul>
+                    {% for item in menu %}
+                        <li>
+                            {{ item.name }} -
+                            {{ item|retailer_price:request.session.user }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="/buy/">Order some Hotpots!</a>
+            {% else %}
+                <h2>No menus defined for this week!</h2>
+                <p>Please contact...</p>
+            {% endif %}
 
-        {% if not subscribed and not activated and not unsubscribed and not invalid %}
-        <form id="slider-subscribe-form" enctype="multipart/form-data" method="post" class="float-center" style="max-width: 500px;">
-            {% csrf_token %}
-            {{ newsletter_form.email.errors }}
-            {{ newsletter_form.email }}
-            <button type="submit" class="button button-border button-light button-circle" value="submit">Subscribe Now</button>
-        </form>
-        {% endif %}
-        <style>
-            .errorlist li { color: darkred; }
-            .errorlist li::before { content: '*'; }
-            .errorlist { display: none; }
-        </style>
+            <hr>
+            {% if not subscribed and not activated and not unsubscribed and not invalid %}
+                <span style="font-size:20px;" class="notopmargin">Subscribe to our free newsletter and get the latest news and updates.</span>
+            {% elif activated %}
+                <span style="font-size:20px;" class="notopmargin">You have successfully activated your subscription to our newsletter.</span>
+            {% elif unsubscribed %}
+                <span style="font-size:20px;" class="notopmargin">You have successfully unsubscribed from our newsletter. To subscribe again, follow the activation link in your confirmation email.</span>
+            {% elif subscribed %}
+                <span style="font-size:20px;" class="notopmargin">Thank you for subscribing to our newsletter! We will inform you on any news and updates.</span>
+            {% elif invalid %}
+                <span style="font-size:20px;" class="notopmargin">You followed a link that is invalid or expired.</span>
+            {% endif %}
+
+            {% if not subscribed and not activated and not unsubscribed and not invalid %}
+            <form id="slider-subscribe-form" enctype="multipart/form-data" method="post" class="float-center" style="max-width: 500px;">
+                {% csrf_token %}
+                {{ newsletter_form.email.errors }}
+                {{ newsletter_form.email }}
+                <button type="submit" class="button button-border button-light button-circle" value="submit">Subscribe Now</button>
+            </form>
+            {% endif %}
+            <style>
+                .errorlist li { color: darkred; }
+                .errorlist li::before { content: '*'; }
+                .errorlist { display: none; }
+            </style>
+        </div>
     </div>
 
     <div class="img-block-3">
@@ -191,7 +197,6 @@
     </div>
 
 
-
     <div class="img-block-4">
         <div class="column large-12 medium-12 small-12 large-centered medium-centered small-centered">
             <img src="/static/hp_logo_white.png" width="200" style="display:block; margin:auto;">
@@ -201,7 +206,7 @@
 
     <div class="row text-center padding-block-1">
         <div class="column small-12 medium-12 large-12 large-centered medium-centered small-centered"></div>
-        <img src="/static/img/5elemente-2.png" width="300" style="display:block; margin:auto;">
+        <img src="/static/img/loeffel-icon-blau.png" width="100" style="display:block; margin:auto;">
         <h1>– Ernährungsberatung –</h1>
         <div class="divider"></div>
         <div class="large-10 medium-12 small-12 small-centered">
@@ -226,6 +231,225 @@
             </div>
             <div class="columns large-4 medium-4 small-10 small-centered large-uncentered medium-uncentered"></div>
             </div>
+        </div>
+    </div>
+
+
+    <div class="img-block-1">
+        <div class="column large-12 medium-12 small-12 large-centered medium-centered small-centered">
+            <img src="/static/hp_logo_white.png" width="200" style="display:block; margin:auto;">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+
+    <div class="row text-center padding-block-1">
+        <div class="column small-12 medium-12 large-12 large-centered medium-centered small-centered"></div>
+        <img src="/static/img/leaf-icon.png" width="80" style="display:block; margin:auto;">
+        <h1>– Unsere Partner und Lieferanten –</h1>
+        <div class="divider"></div>
+        <div class="large-10 medium-12 small-12 small-centered partner-block">
+            <h4>Bei folgenden Vertriebspartnern können Sie Hotpots kaufen oder vor Ort essen:</h4>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Megaphon Cafe Auschlössl</h5>
+                <div class="divider-1"></div>
+                <div>Friedrichgasse 36</div>
+                <div>8010 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.megaphon.at/de/auschloessl/">www.megaphon.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>JOAN Cafe & Bar</h5>
+                <div class="divider-1"></div>
+                <div>Joanneumsviertel 6</div>
+                <div>8010 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.joanneumsviertel.at">www.joanneumsviertel.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Regenbogen Naturladen</h5>
+                <div class="divider-1"></div>
+                <div>Weblinger Gürtel 25</div>
+                <div>8054 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.regenbogenshop.at/">www.regenbogenshop.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>BetSys Bioladen</h5>
+                <div class="divider-1"></div>
+                <div>Reitschulgasse 9</div>
+                <div>8010 Graz</div>
+                <div class="divider-2"></div>
+                <a href="https://de-de.facebook.com/pages/BetSys-Eis-und-Bauernladen/220953747928942">Auf Facebook</a>
+            </div>
+            <div class="columns large-6 medium-6 small-4 text-center text-s">
+                <h5>Tagtraum</h5>
+                <div class="divider-1"></div>
+                <div>Dietrichsteinplatz 7</div>
+                <div>8010 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.tagtraum-cafe.com/">www.tagtraum-cafe.com</a>
+            </div>
+            <div class="columns large-6 medium-6 small-4 text-center text-s">
+                <h5>Die Manufaktur</h5>
+                <div class="divider-1"></div>
+                <div>Josefigasse 1 (nähe Lendplatz)</div>
+                <div>8020 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.diemanufaktur.org/homepage/index.html">www.diemanufaktur.org</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+            </div>
+        </div>
+
+        <div class="large-10 medium-12 small-12 small-centered partner-block">
+            <div class="columns large-12 medium-12 small-12 text-center text-s">
+                <h2>- Lieferanten -</h2>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Biohof Lebenbauer</h5>
+                <div class="divider-1"></div>
+                <div>Ring 8</div>
+                <div>8230 Hartberg</div>
+                <div class="divider-2"></div>
+                <a href="http://www.biohof-lebenbauer.at/">www.biohof-lebenbauer.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Biohof Renate Pirstinger</h5>
+                <div class="divider-1"></div>
+                <div>Am Eggenberg 1</div>
+                <div>8101 Gratkorn</div>
+                <div class="divider-2"></div>
+                <a href="http://www.bioboerse.at/index.php?PageName=inseratdetails_dies&urlData[id]=756">www.bioboerse.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Feinkost Schirnhofer</h5>
+                <div class="divider-1"></div>
+                <div>Kaindorf 298</div>
+                <div>8224 Kaindorf bei Hartberg</div>
+                <div class="divider-2"></div>
+                <a href="http://feinkost-schirnhofer.at/">www.feinkost-schirnhofer.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Naturnahrung Vollkraft</h5>
+                <div class="divider-1"></div>
+                <div>Marktstasse 7</div>
+                <div>2840 Grimmenstein</div>
+                <div class="divider-2"></div>
+                <a href="http://www.vollkraft.com/">www.vollkraft.com</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Pink Pedals</h5>
+                <div class="divider-1"></div>
+                <div>Griesgasse 24</div>
+                <div>8020 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.pinkpedals.at/">www.pinkpedals.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Sonnentor</h5>
+                <div class="divider-1"></div>
+                <div>Sprögnitz 10</div>
+                <div>3910 Zwettl</div>
+                <div class="divider-2"></div>
+                <a href="https://www.sonnentor.com/">www.sonnentor.com</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Wech Geflügel GmbH</h5>
+                <div class="divider-1"></div>
+                <div>Sprögnitz 10</div>
+                <div>9433 St. Andrä/Lavanttal</div>
+                <div class="divider-2"></div>
+                <a href="http://www.wech.at/">www.wech.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Sonnenwind Bio KG</h5>
+                <div class="divider-1"></div>
+                <div>Feldgasse 4a</div>
+                <div>7151 Wallern</div>
+                <div class="divider-2"></div>
+                <a href="http://www.sonnenwind-bio.at/">www.sonnenwind-bio.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+            </div>
+        </div>
+
+
+        <div class="large-10 medium-12 small-12 small-centered partner-block">
+            <div class="columns large-12 medium-12 small-12 text-center text-s">
+                <h2>- Partnerbetriebe -</h2>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>City Yoga</h5>
+                <div class="divider-1"></div>
+                <div>Am Eisernen Tor 3 </div>
+                <div>8010 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://cityyoga.at/">www.cityyoga.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>BIO – Friseur</h5>
+                <div class="divider-1"></div>
+                <div>Mariatroster Str. 178</div>
+                <div>8044 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.biofriseur.com/">www.biofriseur.com</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Fastenhaus Dunst</h5>
+                <div class="divider-1"></div>
+                <div>Bergviertel 64</div>
+                <div>8190 Miesenbach</div>
+                <div class="divider-2"></div>
+                <a href="http://fastenhaus.at/">www.fastenhaus.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+                <h5>Öster. Gesel. für kontrollierte Akupunktur und TCM</h5>
+                <div class="divider-1"></div>
+                <div>Glacistr. 7</div>
+                <div>8010 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://ogka.at/">www.ogka.at</a>
+            </div>
+            <div class="columns large-6 medium-6 small-4 text-center text-s">
+                <h5>Steirische Filmaktion</h5>
+                <div class="divider-1"></div>
+                <div>Eichenhaing. 11e</div>
+                <div>8045 Graz</div>
+                <div class="divider-2"></div>
+                <a href="http://www.wanderkino.com/wk/index.php?Kontakt">www.wanderkino.com</a>
+            </div>
+            <div class="columns large-6 medium-6 small-4 text-center text-s">
+                <h5>G’schickter Wein</h5>
+                <div class="divider-1"></div>
+                <div>Kriehubergasse 10/23</div>
+                <div>1050 Wien</div>
+                <div class="divider-2"></div>
+                <a href="http://www.gschickterwein.at/">www.gschickterwein.at</a>
+            </div>
+            <div class="columns large-3 medium-3 small-4 text-center text-s">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="img-block-5">
+        <div class="column large-12 medium-12 small-12 large-centered medium-centered small-centered">
+            <img src="/static/hp_logo_white.png" width="200" style="display:block; margin:auto;">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+
+   <div class="row text-center padding-block-1">
+        <div class="column small-12 medium-12 large-12 large-centered medium-centered small-centered"></div>
+        <i class="fa fa-phone fa-5x"></i>
+        <div class="divider"></div>
+        <div class="large-10 medium-12 small-12 small-centered contact">
+            <h2>T +43 (0)650/65 33 650</h2>
+            <h2>T +43 (0)660/22 606 32</h2>
+            <h5><a href="mailto:office@hotpot.at"><i class="fa fa-envelope-o fa-1x"></i> office@hotpot.at</a></h5>
+            <h5><i class="fa fa-map-marker fa-2x"></i> Kernstockgasse 19, 8020 Graz</h5>
         </div>
     </div>
 
