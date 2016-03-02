@@ -4,17 +4,20 @@
 <div class="row padding-block-1">
     <div class="columns small-12 medium-8">
         <h2>Hotpots bestellen</h2>
-        <ul>
-            <li>Hotpot-Bestellungen werden jederzeit über unseren Online-Shop entgegengenommen.</li>
-            <li>Die Zustellung der Hotpots erfolgt ausnahmslos dienstags oder mittwochs zwischen 8.00 und 14.00 Uhr</li>
-            <li>Die Zustellung  am nächstfolgenden Zustelltag ist nur dann möglich, wenn die Bestellung bis spätestens um 14 Uhr des Vortages erfolgt.</li>
-            <li>Ab einem Bestellwert von € 50,– übernimmt Hotpot die Zustellgebühr.</li>
-            <li>Bei einem Bestellwert unter € 50,– beträgt die Zustellgebühr € 10,– inklusive 20% MwSt.</li>
-        </ul>
-        <p class="red-note">Folgende Hotpots können Sie bestellen.</p>
-        <p class="red-note">Änderungen vorbehalten!</p>
-
-        <table>
+        <div class="text-s">
+            <ul>
+                <li>Hotpot-Bestellungen werden jederzeit über unseren Online-Shop entgegengenommen.</li>
+                <li>Die Zustellung der Hotpots erfolgt ausnahmslos dienstags oder mittwochs zwischen 8.00 und 14.00 Uhr</li>
+                <li>Die Zustellung  am nächstfolgenden Zustelltag ist nur dann möglich, wenn die Bestellung bis spätestens um 14 Uhr des Vortages erfolgt.</li>
+                <li>Ab einem Bestellwert von € 50,– übernimmt Hotpot die Zustellgebühr.</li>
+                <li>Bei einem Bestellwert unter € 50,– beträgt die Zustellgebühr € 10,– inklusive 20% MwSt.</li>
+            </ul>
+            <p class="red-note">Folgende Hotpots können Sie bestellen.</p>
+            <p class="red-note">Änderungen vorbehalten!</p>
+        </div>
+        {% for c in categories %}
+            <h2>{{ c }}</h2>
+        <table class="buy-table">
           <thead>
             <tr>
                 <th>Produkt</th>
@@ -25,28 +28,32 @@
           </thead>
           <tbody>
             {% for item in menu %}
-            <tr>
-                <td>
-                    <div>{{ item.name }}</div>
-                    <div>{{ item.description }}</div>
-                </td>
-                <td>
-                    {% if item|retailer_price:request.session.user != "undefined" %}
-                        <input size="2" value="1" type="number">
-                    {% endif %}
-                </td>
-                <td>€ {{ item|retailer_price:request.session.user }}</td>
-                <td>
-                    {% if item|retailer_price:request.session.user != "undefined" %}
-                        <button class="add button float-right" style="margin: 0px;"  data-menu-item="{{ item.pk }}">In den Warenkorb</button>
-                    {% else %}
-                        <span>Contact the kitchen to request the price!</span>
-                    {% endif %}
-                </td>
-            </tr>
+                {% if item.category == c %}
+                    <tr>
+                        <td>
+                            <div><h4>{{ item.name }}</h4></div>
+                            <div>{{ item.description }}</div>
+                        </td>
+                        <td>
+                            {% if item|retailer_price:request.session.user != "undefined" %}
+                                <input size="2" value="1" type="number">
+                            {% endif %}
+                        </td>
+                        <td>€ {{ item|retailer_price:request.session.user }}</td>
+                        <td>
+                            {% if item|retailer_price:request.session.user != "undefined" %}
+                                <button class="add button float-right" style="margin: 0px;"  data-menu-item="{{ item.pk }}">In den Warenkorb</button>
+                            {% else %}
+                                <span>Contact the kitchen to request the price!</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
+
           </tbody>
         </table>
+        {% endfor %}
     </div>
 
     <div class="columns small-12 medium-4">
@@ -75,9 +82,13 @@
             {% endif %}
         </table>
         {% if request.session.quantity_error %}
-        <ul class="errorlist">
-            <li>Can not add that quantity of item "{{ request.session.quantity_error_item }}". Only {{ request.session.quantity_error }} are left in stock!</li>
-        </ul>
+            <div class="red-note text-s">
+                <p>
+                    <i class="fa fa-exclamation-triangle"></i>
+                    Can not add that quantity of item "{{ request.session.quantity_error_item }}".
+                    Only {{ request.session.quantity_error }} are left in stock!
+                </p>
+            </div>
         {% endif %}
         <a href="/checkout/"><button class="button">Zur Kasse gehen</button></a>
     </div>

@@ -67,6 +67,7 @@ def home(request):
 def buy(request):
     context = dict(cart=Cart(request))
     context['menu'] = Menu.get_current_menu_items()
+    context['categories'] = Category.objects.all()
     return render(request, 'hotpot/buy.html', context)
 
 

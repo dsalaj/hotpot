@@ -159,6 +159,13 @@ a {
 .info-h {
     font-family: 'Oswald', sans-serif;
 }
+.buy-table div {
+    font-size: 0.8em;
+}
+.buy-table h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2em;
+}
 
 .form-table input {
     margin: 0px;
