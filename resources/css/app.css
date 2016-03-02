@@ -44,3 +44,39 @@
 .padding-block-1 {
     padding: 1.6em 0em;
 }
+.padding-block-2 {
+    padding: 0.2em 0.2em;
+}
+
+.img-block-2 {
+    padding: 1em 0em 1em;
+    background-image: url('/static/img/beratung_01.jpg');
+    background-attachment: fixed;
+    background-position: left top;
+    background-size: cover;
+}
+
+.img-block-3 {
+    padding: 1em 0em 1em;
+    background-image: url('/static/img/zimt.jpg');
+    background-attachment: fixed;
+    background-position: left top;
+    background-size: cover;
+}
+
+.img-block-4 {
+    padding: 1em 0em 1em;
+    background-image: url('/static/img/suppe-02.jpg');
+    background-attachment: fixed;
+    background-position: left top;
+    background-size: cover;
+}
+
+.justify {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.text-s {
+    font-size: 0.8em;
+}
