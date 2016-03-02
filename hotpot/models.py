@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 from solo.models import SingletonModel
 import datetime
 
@@ -12,6 +13,7 @@ class MenuItemRetailerPrice(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=6)
 
 
+@python_2_unicode_compatible
 class MenuItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=2047)
@@ -19,7 +21,7 @@ class MenuItem(models.Model):
     unit_price = models.DecimalField(decimal_places=2, max_digits=6)
 
     def __str__(self):
-        return self.name
+        return str(self.pk) + ' ' + self.name
 
     def retailer_price(self, retailer):
         try:
@@ -33,6 +35,7 @@ class MenuItem(models.Model):
             return self.unit_price
 
 
+@python_2_unicode_compatible
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
@@ -49,8 +52,8 @@ class ItemBatch(models.Model):
         unique_together = ('item', 'menu',)
 
 
+@python_2_unicode_compatible
 class Menu(models.Model):
-    #items = models.ManyToManyField('ItemBatch')
     time_from = models.DateTimeField()
     time_to = models.DateTimeField()
 
@@ -91,6 +94,7 @@ class OrderItem(models.Model):
     total_price = models.DecimalField(decimal_places=2, max_digits=8)
 
 
+@python_2_unicode_compatible
 class Order(models.Model):
     order_year = models.DateField(default=datetime.date.today)
     order_number = models.IntegerField(unique_for_year=order_year)
@@ -128,6 +132,7 @@ class Order(models.Model):
         super(Order, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class Retailer(models.Model):
     password = models.CharField(max_length=40)
 
