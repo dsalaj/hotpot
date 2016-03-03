@@ -73,11 +73,24 @@
                     <td><button class="red-note remove" data-menu-item="{{ item.product.pk }}"><i class="fa-times fa"></i></button></td>
                 </tr>
             {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td></td>
+                    <td>{{ cart.summary }}</td>
+                    <td></td>
+                </tr>
             {% if request.session.shipping_cost %}
                 <tr>
                     <td>Shipping</td>
                     <td></td>
                     <td>{{ request.session.shipping_cost }}</td>
+                    <td></td>
                 </tr>
             {% endif %}
         </table>
