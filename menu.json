@@ -1,0 +1,1 @@
+[{"model": "hotpot.menu", "pk": 1, "fields": {"time_from": "2016-02-10T14:00:00Z", "time_to": "2016-03-02T14:00:00Z"}}, {"model": "hotpot.menu", "pk": 2, "fields": {"time_from": "2016-03-02T14:00:00Z", "time_to": "2016-03-16T14:00:00Z"}}]
