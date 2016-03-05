@@ -15,6 +15,7 @@
         <script type="text/javascript" src="/static/js/vendor/jquery.min.js"></script>
     </head>
   <body>
+    {% block nav %}
     <div data-sticky-container>
         <div class="title-bar" data-responsive-toggle="hotpot-menu" data-hide-for="large">
           <button class="menu-icon" type="button" data-toggle></button>
@@ -38,10 +39,13 @@
           <div class="clearfix"></div>
         </div>
     </div>
+    {% endblock %}
 
 
     {% block body %}
     {% endblock %}
+
+    {% block footer %}
     <div class="row">
       <div class="large-12 columns">
       </div>
@@ -75,6 +79,7 @@
             </div>
         </div>
     </div>
+    {% endblock %}
     <script src="/static/js/vendor/what-input.min.js"></script>
     <script src="/static/js/foundation.min.js"></script>
     <script src="/static/js/app.js"></script>

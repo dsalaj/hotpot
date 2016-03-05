@@ -6,7 +6,27 @@ from django import forms
 
 
 def pretty_date(day):
-    return '('+str(day.day)+'.'+str(day.month)+')'
+    return '('+str(day.day)+'.'+str(day.month)+'.)'
+
+
+def ordered_delivery_dates():
+    choices = ()
+    choices_o = []
+    for o in Order.objects.all():
+        if o.delivery_date not in choices_o:
+            choices_o.append(o.delivery_date)
+            weekday_str = DeliveryDays.DAY[o.delivery_date.weekday()][1]
+            choices = choices + ((o.delivery_date, weekday_str+pretty_date(o.delivery_date)),)
+    return choices
+
+
+class ReportForm(forms.Form):
+    delivery_days = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=ordered_delivery_dates())
+
+    def get_delivery_days(self):
+        if not self.is_valid():
+            return []
+        return self.cleaned_data['delivery_days']
 
 
 def next_delivery_dates():

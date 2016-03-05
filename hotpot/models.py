@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
@@ -5,6 +6,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from solo.models import SingletonModel
 import datetime
+from django.utils.encoding import smart_text
 
 
 class MenuItemRetailerPrice(models.Model):
@@ -21,7 +23,7 @@ class MenuItem(models.Model):
     unit_price = models.DecimalField(decimal_places=2, max_digits=6)
 
     def __str__(self):
-        return str(self.pk) + ' ' + self.name
+        return smart_text(str(self.pk) + ' ' + self.name)
 
     def retailer_price(self, retailer):
         try:
@@ -86,12 +88,16 @@ class Menu(models.Model):
                                       "existing menu ("+str(m)+") time range")
 
 
+@python_2_unicode_compatible
 class OrderItem(models.Model):
     order = models.ForeignKey('Order')
     item = models.ForeignKey('MenuItem')
-    retailer = models.ForeignKey('Retailer', null=True)
+    retailer = models.ForeignKey('Retailer', null=True, blank=True)
     amount = models.IntegerField()
     total_price = models.DecimalField(decimal_places=2, max_digits=8)
+
+    def __str__(self):
+        return smart_text('[' + smart_text(self.amount) + '] - ' + smart_text(self.item.name))
 
 
 @python_2_unicode_compatible
@@ -115,6 +121,10 @@ class Order(models.Model):
     @property
     def serial_number(self):
         return str(self.order_year.year)+'/'+str(self.order_number)
+
+    @property
+    def items(self):
+        return self.orderitem_set.all()
 
     def __str__(self):
         return self.serial_number + ' - ' + str(self.email)

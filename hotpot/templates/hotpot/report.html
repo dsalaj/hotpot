@@ -1,0 +1,113 @@
+{% extends 'hotpot/base.html' %}
+
+{% block nav %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="small-12 medium-6 columns">
+            <div class="callout">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" name="button" class="medium success button" value="Show" />
+                    <input type="submit" name="button" class="medium secondary button" value="Export" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns">
+        <div class="table-scroll">
+            {% if orders %}
+                <table>
+                  <thead>
+                    <tr>
+                      <th>timestamp</th>
+                      <th>delivery_date</th>
+                      <th>buyer</th>
+                      <th>address</th>
+                      <th>total price</th>
+                      <th>ordered items</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for o in orders %}
+                    <tr>
+                      <td>{{ o.timestamp }}</td>
+                      <td>{{ o.delivery_date }}</td>
+                      <td>
+                          <div>{{ o.title }} {{ o.first_name }} {{ o.family_name }}</div>
+                          <div>{{ o.email }}</div>
+                          <div>{{ o.phone }}</div>
+                      </td>
+                      <td>
+                          <div>{{ o.address }}</div>
+                          <div>{{ o.zip }}, {{ o.place }}</div>
+                      </td>
+                      <td>{{ o.total_price }}</td>
+                      <td>
+                        {% for oi in o.items %}
+                            <div>{{ oi }}</div>
+                        {% endfor %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    {% if sum_mitems %}
+    <hr>
+    <div class="row">
+        <div class="small-12 columns">
+        <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>item</th>
+                  <th>total ordered</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for key, value in sum_mitems.items %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% comment %}
+    {% for key, value in sum_mitems.items %}
+        <div>{{ key }} = {{ value }}</div>
+    {% endfor %}
+    <hr>
+    {% for item in sum_unique %}
+        <div>{{ item }}</div>
+    {% endfor %}
+    {% endcomment %}
+
+
+    <style>
+        #id_delivery_days label input{
+            margin: 0px;
+        }
+        ul#id_delivery_days{
+            list-style-type: none;
+            margin-left: 0.2em;
+            max-height: 10em;
+            overflow-y: scroll;
+        }
+    </style>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

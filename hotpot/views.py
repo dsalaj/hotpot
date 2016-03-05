@@ -1,4 +1,5 @@
 # views.py
+from __future__ import unicode_literals
 from django.shortcuts import render
 from hotpot.models import *
 from hotpot.forms import *
@@ -10,6 +11,7 @@ from django.views.decorators.cache import never_cache
 from cart.cart import Cart
 from decimal import Decimal
 import os
+# -*- coding: utf-8 -*-
 
 
 def add_to_cart(request, product_id, quantity):
@@ -53,6 +55,43 @@ def change_in_cart(request, product_id, quantity):
             return JsonResponse({"return": "fail"})
     else:
         remove_from_cart(request, product_id)
+
+
+@never_cache
+def report(request):
+    context = {}
+    if not request.user.is_superuser:
+        return render(request, 'hotpot/clean.html', {'msg': 'Admin log in required'})
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        context['form'] = form
+        if form.is_valid():
+            delivery_days = form.get_delivery_days()
+            selected_orders = Order.objects.filter(delivery_date__in=delivery_days)
+            context['sum_total'] = sum([o.total_price for o in selected_orders])
+            unique_menuitems = set()
+            menuitems_summary = {}
+            for o in selected_orders:
+                unique_menuitems = unique_menuitems.union([i.item for i in o.items])
+                for i in o.items:
+                    if menuitems_summary.has_key(i.item):
+                        menuitems_summary[i.item] += i.amount
+                    else:
+                        menuitems_summary[i.item] = i.amount
+            #context['sum_unique'] = list(unique_menuitems)
+            context['sum_mitems'] = menuitems_summary
+            if request.POST['button'] == 'Show':
+                context['orders'] = selected_orders
+                return render(request, 'hotpot/report.html', context)
+            elif request.POST['button'] == 'Export':
+                return render(request, 'hotpot/clean.html', {'msg': 'TODO: implement csv export'})
+            else:
+                return render(request, 'hotpot/clean.html', {'msg': 'Unknown submit value'})
+    else:
+        form = ReportForm()
+        context['form'] = form
+    return render(request, 'hotpot/report.html', context)
 
 
 @never_cache
