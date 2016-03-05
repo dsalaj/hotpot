@@ -34,12 +34,10 @@ def remove_from_cart(request, product_id):
     product = MenuItem.objects.get(id=product_id)
     cart = Cart(request)
     cart.remove(product)
-    print("removed thing to cart")
 
 
 def change_in_cart(request, product_id, quantity):
     if int(quantity) > 0:
-        print "in change"
         product = MenuItem.objects.get(id=product_id)
         cart = Cart(request)
         batch_item = Menu.get_current_menu().itembatch_set.get(item=product)
@@ -51,7 +49,6 @@ def change_in_cart(request, product_id, quantity):
         else:
             request.session['quantity_error'] = batch_item.amount
             request.session['quantity_error_item'] = product
-            print "failed change"
             return JsonResponse({"return": "fail"})
     else:
         remove_from_cart(request, product_id)
@@ -124,9 +121,7 @@ def checkout(request):
                                          amount=item.quantity,
                                          total_price=item.total_price)
                 item_batch = batch.get(item=item.product)
-                print "Item " + str(item_batch.item.name) + " amount = " + str(item_batch.amount) + " - " + str(item.quantity)
                 item_batch.amount = item_batch.amount - item.quantity
-                print "Item " + str(item_batch.item.name) + " amount = " + str(item_batch.amount)
                 item_batch.full_clean() #FIXME
                 item_batch.save()
             order.total_price = sum([i.total_price for i in OrderItem.objects.filter(order=order)])
