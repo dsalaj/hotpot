@@ -165,7 +165,7 @@ def generate_invoice_pdf(order, shipping):
     context['order'] = order
     context['cwd'] = os.getcwd()
     if shipping == 0:
-        context['mwst10'] = Decimal(order.total_price * 0.1).quantize(Decimal('0.01'))
+        context['mwst10'] = Decimal(order.total_price * Decimal(0.1)).quantize(Decimal('0.01'))
         context['mwst20'] = Decimal(0).quantize(Decimal('0.01'))
     else:
         context['mwst10'] = Decimal((float(order.total_price) - shipping) * 0.1).quantize(Decimal('0.01'))
