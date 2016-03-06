@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'import_export',
     'solo.apps.SoloAppConfig',
     'cart',
     'hotpot',
@@ -152,3 +153,4 @@ DATETIME_FORMAT = 'd.m.Y - H:i:s'
 USE_L10N = False
 
 LINK_PREFIX = 'https://'
+
