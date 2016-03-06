@@ -2,6 +2,16 @@
 {% load extras %}
 
 {% block body %}
+    {% if order_complete %}
+    <div class="row text-center padding-block-1" id="about">
+        <div class="column small-12 medium-12 large-12 large-centered medium-centered small-centered"></div>
+        <img src="/static/img/elements-icon-neu.png" width="50" style="display:block; margin:auto;">
+        <h1>Vielen Dank für Ihre Bestellung!</h1>
+        <img src="/static/img/bowl-icon.png" width="75" style="display:block; margin:auto;">
+        <div class="divider"></div>
+    </div>
+    {% endif %}
+
     <div class="img-block-1 top-img-block">
         <div class="column large-12 medium-12 small-12 large-centered medium-centered small-centered">
             <img src="/static/hp_logo_white.png" width="400" style="display:block; margin:auto;">

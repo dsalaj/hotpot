@@ -140,7 +140,12 @@ def checkout(request):
             # return pdf_preview(generate_invoice_pdf(order, shipping))
             finish(generate_invoice_pdf(order, shipping), order, shipping)
             request.session.flush()
-            return render(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
+
+            context = dict(cart=Cart(request))
+            context['menu'] = Menu.get_current_menu_items()
+            context['categories'] = Category.objects.all()
+            context['order_complete'] = True
+            return render(request, 'hotpot/home.html', context)
     else:
         order_form = OrderForm()
     context['order_form'] = order_form
