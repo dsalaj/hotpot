@@ -1,0 +1,22 @@
+{% load i18n %}
+Guten Tag,
+
+vielen Dank für Ihre Bestellung.
+
+{% for order_item in order_items %}
+  {{ order_item.amount }} - {{ order_item.item.name }} -- € {{ order_item.total_price }}
+{% endfor %}
+{% if shipping %}
+  1 - Versand -- € {{ shipping }}</li>
+{% endif %}
+
+--
+Dipl. EB
+Gabriele Edler-Binder-Krieglstein
+Mag. Oliver Binder-Krieglstein
+Kernstockgasse 19
+8020 GRAZ
+Tel: +43 (0)650/65 33 650
+Tel: +43 (0)660/22 606 32
+office@hotpot.at
+www.hotpot.at

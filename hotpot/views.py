@@ -1,6 +1,7 @@
 # views.py
 from __future__ import unicode_literals
 from django.shortcuts import render
+from hotpot import settings
 from hotpot.models import *
 from hotpot.forms import *
 from django.http import HttpResponse, JsonResponse
@@ -11,6 +12,11 @@ from django.views.decorators.cache import never_cache
 from cart.cart import Cart
 from decimal import Decimal
 import os
+from django.core import mail
+from django.template.loader import render_to_string
+from smtplib import SMTPException
+import logging
+logger = logging.getLogger('hotpot.' + __name__)
 # -*- coding: utf-8 -*-
 
 
@@ -131,10 +137,10 @@ def checkout(request):
             else:
                 shipping = 0
             order.save()
-            #finish(generate_invoice_pdf({'order': order}))
-            return pdf_preview(generate_invoice_pdf(order, shipping))
+            # return pdf_preview(generate_invoice_pdf(order, shipping))
+            finish(generate_invoice_pdf(order, shipping), order, shipping)
             request.session.flush()
-            return render_with_middleware(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
+            return render(request, 'hotpot/clean.html', {'msg': 'Thank you for the Order'})
     else:
         order_form = OrderForm()
     context['order_form'] = order_form
@@ -142,17 +148,59 @@ def checkout(request):
     return render(request, 'hotpot/checkout.html', context)
 
 
-def finish(pdf):
+def finish(pdf, order, shipping):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="pdfkit_out.pdf"'
     response.write(pdf)
     print "pdf invoice rendered"
-    email = EmailMessage('Hello', 'Here is the message with pdf.', 'hotpot.graz@gmail.com',
-                         ['salaj.au@gmail.com', 'frost_master@hotmail.com'])
-    email.attach('hotpot_invoice.pdf', response.getvalue(), 'application/pdf')
-    print "pdf attached to email"
-    email.send(fail_silently=False)
-    print "email sent"
+    # email = EmailMessage('Ihre HOTPOT Bestellung', 'Ihre HOTPOT Bestellung', settings.DEFAULT_FROM_EMAIL,
+    #                      ['salaj.au@gmail.com', 'frost_master@hotmail.com'])
+    # email.attach('hotpot_rechnung.pdf', response.getvalue(), 'application/pdf')
+    # print "pdf attached to email"
+    # email.send(fail_silently=False)
+    # print "email sent"
+
+    try:
+        connection = mail.get_connection()
+    except SMTPException as e:
+        logger.error("Failed to open connection to mail server",
+                     exc_info=True, extra={'request': None, 'error':e})
+        return
+
+    sender_address = settings.DEFAULT_FROM_EMAIL
+    mail_list = []
+
+    # hotpot new invoice email
+    hotpot_context = {'order': order, 'order_items': order.orderitem_set.all()}
+    if shipping != 0:
+        hotpot_context['shipping'] = Decimal(shipping).quantize(Decimal('0.01'))
+    hotpot_text_message = render_to_string('email/hotpot_new_order.txt', hotpot_context)
+    hotpot_mail = mail.EmailMessage('[HOTPOT] Neue Bestellung ist eingegangen',
+                                    hotpot_text_message,
+                                    sender_address,
+                                    [settings.DEFAULT_FROM_EMAIL])
+    hotpot_mail.attach('hotpot_rechnung.pdf', response.getvalue(), 'application/pdf')
+    mail_list.append(hotpot_mail)
+
+    # subscriber new newsletter subscription email
+    buyer_context = hotpot_context
+    buyer_text_message = render_to_string('email/buyer_new_order.txt', buyer_context)
+    buyer_mail = mail.EmailMessage('Ihre HOTPOT Bestellung',
+                                   buyer_text_message,
+                                   sender_address,
+                                   [order.email])
+    buyer_mail.attach('hotpot_rechnung.pdf', response.getvalue(), 'application/pdf')
+    mail_list.append(buyer_mail)
+
+    for message in mail_list:
+        try:
+            message.connection = connection
+            message.send()
+            print "invoice email sent"
+        except SMTPException as e:
+            logger.error("Sending mail to %s failed" % (str(message.to)),
+                         exc_info=True, extra={'request': None, 'mailmessage': message, 'error': e})
+    connection.close()
 
 
 def generate_invoice_pdf(order, shipping):

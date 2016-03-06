@@ -85,15 +85,15 @@ WSGI_APPLICATION = 'hotpot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-import dj_database_url
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+# import dj_database_url
+# DATABASES = {}
+# DATABASES['default'] = dj_database_url.config()
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -140,13 +140,21 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(os.path.join(BASE_DIR, 'static'), 'uploads')
 MEDIA_URL = '/static/uploads/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'hotpot.graz@gmail.com'
+# EMAIL_HOST_PASSWORD = 'hotpot14776655'
+
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'hotpot.graz@gmail.com'
-EMAIL_HOST_PASSWORD = 'hotpot14776655'
-DEFAULT_FROM_EMAIL = 'hotpot.graz@gmail.com'
+EMAIL_HOST = 'mail.hotpot.at'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'office@hotpot.at'
+EMAIL_HOST_PASSWORD = 'gabi'
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 DEFAULT_TO_EMAIL = 'salaj.au@gmail.com'
 
 DATETIME_FORMAT = 'd.m.Y - H:i:s'

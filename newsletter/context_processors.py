@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ImproperlyConfigured
 from hotpot import settings
 import logging
-logger = logging.getLogger('demabu.' + __name__)
+logger = logging.getLogger('hotpot.' + __name__)
 
 
 def newsletter_view_helper(request):
