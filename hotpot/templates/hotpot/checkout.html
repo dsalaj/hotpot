@@ -6,7 +6,7 @@
         {% csrf_token %}
         <div class="columns small-12 medium-8">
         <h4 class="info-h">Bitte prüfen Sie Ihre Bestellung</h4>
-        <table>
+        <table id="checkout-table">
             <tr>
                 <th>Product</th>
                 <th>Item Price</th>
@@ -16,9 +16,9 @@
             {% for item in cart %}
             <tr>
                 <td>{{ item.product.name }}</td>
-                <td>{{ item.unit_price }}</td>
+                <td>€{{ item.unit_price }}</td>
                 <td><input size="2" value="{{ item.quantity }}" type="number"></td>
-                <td>{{ item.total_price }}</td>
+                <td>€{{ item.total_price }}</td>
                 <td><button class="change button" style="margin: 0px;" data-menu-item="{{ item.product.pk }}">Change</button></td>
                 <td><button class="remove red-note" data-menu-item="{{ item.product.pk }}"><i class="fa-times fa"></i></button></td>
             </tr>
@@ -32,19 +32,19 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Total</td>
+                    <td>Subtotal</td>
                     <td></td>
                     <td></td>
-                    <td>{{ cart.summary }}</td>
+                    <td>€{{ cart.summary }}</td>
                     <td></td>
                     <td></td>
                 </tr>
             {% if request.session.shipping_cost %}
                 <tr>
-                    <td>Shipping</td>
+                    <td>Lieferkosten</td>
                     <td></td>
                     <td></td>
-                    <td>{{ request.session.shipping_cost }}</td>
+                    <td>€{{ request.session.shipping_cost }}</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -82,9 +82,11 @@
                 });
             });
         </script>
-        <div class="columns small-12 medium-4">
-            <a class="button" href="/buy/">Zurück</a>
-            <button class="button" name="order_form_submit" type="submit">Bestellung abschließen</button>
+        <div class="columns small-12 medium-4" data-sticky-container>
+            <div class="sticky" data-sticky data-margin-top="7">
+                <a class="button" href="/buy/">Zurück</a>
+                <button class="button success" name="order_form_submit" type="submit">Bestellung abschließen</button>
+            </div>
         </div>
     </form>
 </div>

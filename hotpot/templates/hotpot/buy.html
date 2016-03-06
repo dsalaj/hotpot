@@ -39,7 +39,7 @@
                                 <input size="2" value="1" type="number">
                             {% endif %}
                         </td>
-                        <td>€ {{ item|retailer_price:request.session.user }}</td>
+                        <td class="buy-table-price">€ {{ item|retailer_price:request.session.user }}</td>
                         <td>
                             {% if item|retailer_price:request.session.user != "undefined" %}
                                 <button class="add button float-right" style="margin: 0px;"  data-menu-item="{{ item.pk }}">In den Warenkorb</button>
@@ -56,9 +56,10 @@
         {% endfor %}
     </div>
 
-    <div class="columns small-12 medium-4">
+    <div class="columns small-12 medium-4" data-sticky-container>
+    <div class="sticky" data-sticky data-margin-top="3">
         <h2>Cart</h2>
-        <table>
+        <table id="cart-table">
             <tr>
                 <th>Artikel</th>
                 <th>Anzahl</th>
@@ -69,7 +70,7 @@
                 <tr>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>{{ item.total_price }}</td>
+                    <td>€{{ item.total_price }}</td>
                     <td><button class="red-note remove" data-menu-item="{{ item.product.pk }}"><i class="fa-times fa"></i></button></td>
                 </tr>
             {% endfor %}
@@ -80,16 +81,16 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Total</td>
+                    <td>Subtotal</td>
                     <td></td>
-                    <td>{{ cart.summary }}</td>
+                    <td>€{{ cart.summary }}</td>
                     <td></td>
                 </tr>
             {% if request.session.shipping_cost %}
                 <tr>
-                    <td>Shipping</td>
+                    <td>Versand</td>
                     <td></td>
-                    <td>{{ request.session.shipping_cost }}</td>
+                    <td>€{{ request.session.shipping_cost }}</td>
                     <td></td>
                 </tr>
             {% endif %}
@@ -104,6 +105,7 @@
             </div>
         {% endif %}
         <a href="/checkout/"><button class="button">Zur Kasse gehen</button></a>
+    </div>
     </div>
 
     <script>

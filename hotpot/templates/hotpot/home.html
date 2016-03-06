@@ -67,7 +67,7 @@
                                 <div class="divider-1"></div>
                                 <div>{{ item.description }}</div>
                                 <div class="divider-2"></div>
-                                <div>{{ item|retailer_price:request.session.user }}</div>
+                                <div>€ {{ item|retailer_price:request.session.user }}</div>
                             </div>
                             {% endif %}
                         {% endfor %}
@@ -77,8 +77,11 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <h2>No menus defined for this week!</h2>
-                <p>Please contact...</p>
+                <h2>Menü nicht definiert</h2>
+                <p>Für mehr info wenden Sie sich an uns!</p>
+                <div>Tel: +43 (0)650/65 33 650</div>
+                <div>Tel: +43 (0)660/22 606 32</div>
+                <div>office@hotpot.at</div>
             {% endif %}
             <div class="text-s" style="margin-bottom: 1em;">
                 <div>* vegan</div>

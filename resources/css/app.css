@@ -111,7 +111,7 @@
     color: #D63017;
 }
 
-.top-bar, .is-anchored {
+#hotpot-menu, #hotpot-menu.is-anchored {
     font-family: 'Oswald', sans-serif;
     text-transform: uppercase;
     font-family: Arial,Helvetica,sans-serif;
@@ -180,4 +180,17 @@ table.form-table * {
 
 .nomargin {
     margin: 0px !important;
+}
+
+#cart-table, .buy-table-price, #checkout-table {
+    font-size: small;
+}
+
+.errorlist {
+    color: red;
+    list-style: none;
+    margin: 0px;
+}
+.errorlist li:before {
+    content: '*';
 }
