@@ -140,19 +140,13 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(os.path.join(BASE_DIR, 'static'), 'uploads')
 MEDIA_URL = '/static/uploads/'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'hotpot.graz@gmail.com'
-# EMAIL_HOST_PASSWORD = 'hotpot14776655'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'mail.hotpot.at'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = 'office@hotpot.at'
-EMAIL_HOST_PASSWORD = 'gabi'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'hotpot.graz@gmail.com'
+EMAIL_HOST_PASSWORD = 'hotpot14776655'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 DEFAULT_TO_EMAIL = 'salaj.au@gmail.com'
